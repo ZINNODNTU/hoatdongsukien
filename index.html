@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cổng Thông Tin Hoạt Động Sinh Viên</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary: #1e293b;
+            --accent: #2563eb;
+            --success: #10b981;
+            --danger: #ef4444;
+            --bg: #f8fafc;
+            --card-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            --text-main: #334155;
+            --text-muted: #64748b;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--bg);
+            margin: 0;
+            color: var(--text-main);
+            line-height: 1.6;
+        }
+
+        .container { max-width: 1200px; margin: 0 auto; padding: 40px 20px; }
+
+        header { text-align: center; margin-bottom: 40px; }
+        header h1 { font-size: 2.2rem; font-weight: 800; color: var(--primary); margin: 0; letter-spacing: -0.5px; }
+        header p { color: var(--text-muted); margin-top: 10px; font-size: 1.1rem; }
+
+        /* Bộ lọc và Tìm kiếm */
+        .toolbar {
+            background: white;
+            padding: 25px;
+            border-radius: 24px;
+            box-shadow: var(--card-shadow);
+            margin-bottom: 40px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .filter-tabs { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 5px; }
+        .filter-tab {
+            padding: 10px 24px;
+            border-radius: 12px;
+            border: none;
+            background: #f1f5f9;
+            color: var(--text-muted);
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.3s;
+            white-space: nowrap;
+        }
+        .filter-tab.active { background: var(--accent); color: white; }
+
+        .search-box { position: relative; }
+        .search-box input {
+            width: 100%;
+            padding: 15px 20px 15px 50px;
+            border-radius: 15px;
+            border: 1px solid #e2e8f0;
+            outline: none;
+            font-size: 1rem;
+            transition: 0.3s;
+        }
+        .search-box i { position: absolute; left: 18px; top: 50%; transform: translateY(-50%); color: var(--text-muted); }
+
+        /* Grid hiển thị */
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 30px; }
+
+        /* Thiết kế Card chuyên nghiệp */
+        .card {
+            background: white;
+            border-radius: 24px;
+            border: 1px solid #f1f5f9;
+            display: flex;
+            flex-direction: column;
+            transition: all 0.3s ease;
+            overflow: hidden;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02);
+        }
+        .card:hover { transform: translateY(-8px); box-shadow: var(--card-shadow); }
+
+        /* Trạng thái ngưng */
+        .card.is-closed { opacity: 0.7; filter: grayscale(0.8); background: #f8fafc; }
+        .card.is-closed .btn-reg { background: #94a3b8; pointer-events: none; }
+
+        .card-header { padding: 25px 25px 15px; position: relative; }
+        .badge-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        .type-tag { font-size: 0.7rem; font-weight: 800; padding: 5px 12px; border-radius: 8px; background: rgba(37,99,235,0.1); color: var(--accent); text-transform: uppercase; }
+        .status-tag { font-size: 0.7rem; font-weight: 800; padding: 5px 12px; border-radius: 8px; }
+        .status-on { background: #dcfce7; color: #166534; }
+        .status-off { background: #fee2e2; color: #991b1b; }
+
+        .card-title { font-size: 1.2rem; font-weight: 800; margin: 0; color: #0f172a; line-height: 1.5; }
+
+        .card-body { padding: 0 25px 20px; flex: 1; }
+        .info-grid { display: grid; grid-template-columns: 1fr; gap: 15px; margin-top: 15px; }
+        .info-item { display: flex; gap: 12px; font-size: 0.9rem; }
+        .info-item i { color: var(--accent); width: 18px; text-align: center; margin-top: 4px; }
+        .info-text strong { display: block; font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+
+        .card-footer { padding: 20px 25px 25px; display: flex; gap: 10px; border-top: 1px solid #f8fafc; }
+        .btn { flex: 1; padding: 12px; border-radius: 12px; text-decoration: none; font-weight: 700; font-size: 0.85rem; text-align: center; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .btn-reg { background: var(--accent); color: white; }
+        .btn-group { background: #f1f5f9; color: var(--primary); }
+        .btn-share { width: 45px; flex: none; background: white; border: 1px solid #e2e8f0; color: var(--text-muted); }
+        .btn:hover { opacity: 0.9; transform: scale(1.02); }
+
+        /* Phân trang */
+        .pagination { display: flex; justify-content: center; gap: 8px; margin-top: 40px; }
+        .page-btn { padding: 10px 18px; border-radius: 10px; border: 1px solid #e2e8f0; background: white; font-weight: 700; cursor: pointer; }
+        .page-btn.active { background: var(--accent); color: white; border-color: var(--accent); }
+
+        @media (max-width: 600px) { .grid { grid-template-columns: 1fr; } .container { padding: 20px 15px; } }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>Hoạt Động & Sự Kiện</h1>
+        <p id="counter">Đang tải dữ liệu từ hệ thống...</p>
+    </header>
+
+    <div class="toolbar">
+        <div class="filter-tabs" id="filterTabs">
+            <button class="filter-tab active" onclick="setFilter('TẤT CẢ')">Tất cả</button>
+            <button class="filter-tab" onclick="setFilter('CUỘC THI')">Cuộc thi</button>
+            <button class="filter-tab" onclick="setFilter('HOẠT ĐỘNG')">Hoạt động</button>
+            <button class="filter-tab" onclick="setFilter('WORKSHOP')">Workshop</button>
+        </div>
+        <div class="search-box">
+            <i class="fas fa-search"></i>
+            <input type="text" id="searchInput" placeholder="Tìm tên chương trình, địa điểm, đơn vị..." oninput="handleSearch()">
+        </div>
+    </div>
+
+    <div class="grid" id="mainGrid"></div>
+    <div class="pagination" id="pagination"></div>
+</div>
+
+<script>
+    const sheetAPI = "https://opensheet.elk.sh/1bIoZD9x1DbtonKqhRqVf_oDGEwyiQTYzlAgG8Bi0vX4/TONGHOP";
+    
+    let db = [];
+    let filtered = [];
+    let currentPage = 1;
+    let currentTab = 'TẤT CẢ';
+    const perPage = 6;
+
+    async function loadData() {
+        try {
+            const res = await fetch(sheetAPI);
+            const data = await res.json();
+            // Lọc hàng trống và đảo ngược để mới nhất lên đầu
+            db = data.filter(i => i["Tên chương trình"]).reverse();
+            applyFilters();
+        } catch (e) {
+            document.getElementById('counter').innerText = "Lỗi tải dữ liệu!";
+        }
+    }
+
+    function applyFilters() {
+        const search = document.getElementById('searchInput').value.toLowerCase();
+        
+        filtered = db.filter(item => {
+            const matchTab = currentTab === 'TẤT CẢ' || (item["Loại"] || "").toUpperCase() === currentTab;
+            const matchSearch = item["Tên chương trình"].toLowerCase().includes(search) || 
+                                (item["Đơn vị phụ trách"] || "").toLowerCase().includes(search);
+            return matchTab && matchSearch;
+        });
+
+        currentPage = 1;
+        render();
+    }
+
+    function render() {
+        const grid = document.getElementById('mainGrid');
+        grid.innerHTML = "";
+        
+        const start = (currentPage - 1) * perPage;
+        const slice = filtered.slice(start, start + perPage);
+
+        document.getElementById('counter').innerText = `Hiện có ${filtered.length} hoạt động phù hợp`;
+
+        slice.forEach(item => {
+            const status = (item["Trạng thái"] || "").toLowerCase();
+            const isNgung = status.includes("ngưng") || status.includes("hết") || status.includes("đóng");
+            
+            const card = document.createElement('div');
+            card.className = `card ${isNgung ? 'is-closed' : ''}`;
+            card.innerHTML = `
+                <div class="card-header">
+                    <div class="badge-row">
+                        <span class="type-tag">${item["Loại"] || 'Sự kiện'}</span>
+                        <span class="status-tag ${isNgung ? 'status-off' : 'status-on'}">
+                            ${isNgung ? 'ĐÃ NGƯNG' : 'ĐANG MỞ'}
+                        </span>
+                    </div>
+                    <h3 class="card-title">${item["Tên chương trình"]}</h3>
+                </div>
+                <div class="card-body">
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <i class="fas fa-calendar-day"></i>
+                            <div class="info-text">
+                                <strong>Thời gian & Hạn đăng ký</strong>
+                                ${item["Thời gian"]}
+                                <div style="color:var(--danger); font-weight:700; font-size:0.8rem">Hạn: ${item["Hạn đăng ký"] || 'Đến khi đủ'}</div>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <div class="info-text"><strong>Địa điểm</strong>${item["Địa điểm"]}</div>
+                        </div>
+                        <div class="info-item">
+                            <i class="fas fa-user-friends"></i>
+                            <div class="info-text"><strong>Số lượng & Đơn vị</strong>SL: ${item["Số lượng"] || 'Không giới hạn'} • ${item["Đơn vị phụ trách"]}</div>
+                        </div>
+                        <div class="info-item">
+                            <i class="fas fa-tshirt"></i>
+                            <div class="info-text"><strong>Trang phục</strong>${item["Trang phục"] || 'Tự do'}</div>
+                        </div>
+                        <div class="info-item">
+                            <i class="fas fa-award"></i>
+                            <div class="info-text"><strong>Quyền lợi</strong>${item["Quyền lợi"]}</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="${item["Link đăng ký"]}" target="_blank" class="btn btn-reg">${isNgung ? 'Đã ngưng nhận' : 'Đăng ký ngay'}</a>
+                    ${item["Link nhóm"] ? `<a href="${item["Link nhóm"]}" target="_blank" class="btn btn-group"><i class="fab fa-facebook-messenger"></i> Nhóm</a>` : ''}
+                    <button class="btn btn-share" onclick="share('${item["Tên chương trình"]}', '${item["Link đăng ký"]}')"><i class="fas fa-share-alt"></i></button>
+                </div>
+            `;
+            grid.appendChild(card);
+        });
+
+        renderPager();
+    }
+
+    function renderPager() {
+        const total = Math.ceil(filtered.length / perPage);
+        const pager = document.getElementById('pagination');
+        pager.innerHTML = "";
+        if(total <= 1) return;
+
+        for(let i=1; i<=total; i++) {
+            const b = document.createElement('button');
+            b.className = `page-btn ${i === currentPage ? 'active' : ''}`;
+            b.innerText = i;
+            b.onclick = () => { currentPage = i; render(); window.scrollTo({top:0, behavior:'smooth'}); };
+            pager.appendChild(b);
+        }
+    }
+
+    function setFilter(t) {
+        currentTab = t;
+        document.querySelectorAll('.filter-tab').forEach(btn => {
+            btn.classList.toggle('active', btn.innerText.toUpperCase() === t);
+        });
+        applyFilters();
+    }
+
+    function handleSearch() { applyFilters(); }
+
+    function share(title, url) {
+        if(navigator.share) {
+            navigator.share({title: title, url: url});
+        } else {
+            navigator.clipboard.writeText(url);
+            alert("Đã sao chép link đăng ký!");
+        }
+    }
+
+    loadData();
+</script>
+
+</body>
+</html>
