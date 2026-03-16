@@ -2,251 +2,288 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Event Parser - Hoạt động Khoa</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Cổng Thông Tin Sinh Viên - Khoa Công nghệ thông tin - Truyền thông</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <style>
-        body { background-color: #f4f7fa; font-family: 'Plus Jakarta Sans', sans-serif; }
-        .card { border: none; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
-        .header-section { background: linear-gradient(135deg, #2563eb, #1d4ed8); color: white; padding: 25px; border-radius: 20px 20px 0 0; }
-        .form-label { font-weight: 700; color: #475569; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.5px; }
-        .ai-loading { display: none; }
-        .status-badge { font-size: 0.85rem; padding: 6px 14px; border-radius: 30px; }
-        textarea { resize: none; border-radius: 12px !important; }
-        input, select { border-radius: 10px !important; padding: 10px 15px !important; }
+        :root {
+            --bg-body: #f8fafc;
+            --it-navy: #0f172a;
+            --it-blue: #2563eb;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --color-contest: #f59e0b;
+            --color-workshop: #8b5cf6;
+            --color-activity: #0ea5e9;
+            --color-closed: #94a3b8;
+        }
+
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: var(--bg-body); margin: 0; color: var(--text-main); line-height: 1.4; }
+
+        /* Hero */
+        .hero { background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); padding: 60px 20px 100px; text-align: center; color: white; }
+        .hero h1 { font-size: 2.2rem; font-weight: 800; margin: 0; }
+        .stats-badge { display: inline-flex; background: rgba(255,255,255,0.15); padding: 8px 20px; border-radius: 99px; margin-top: 15px; font-size: 0.9rem; font-weight: 700; border: 1px solid rgba(255,255,255,0.2); }
+
+        .container { max-width: 1440px; margin: -50px auto 60px; padding: 0 16px; }
+
+        /* Toolbar */
+        .toolbar { background: rgba(255,255,255,0.98); backdrop-filter: blur(10px); padding: 20px; border-radius: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); margin-bottom: 30px; }
+        .filter-tabs { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 5px; scrollbar-width: none; }
+        .filter-tabs::-webkit-scrollbar { display: none; }
+        .tab-btn { padding: 10px 20px; border-radius: 12px; border: none; background: #f1f5f9; color: var(--text-muted); font-weight: 700; cursor: pointer; white-space: nowrap; font-size: 0.85rem; transition: 0.2s; }
+        .tab-btn.active { background: var(--it-navy); color: white; }
+
+        .search-row { display: grid; grid-template-columns: 1fr auto; gap: 10px; margin-top: 15px; }
+        .search-box { position: relative; flex: 1; }
+        .search-box input { width: 100%; padding: 12px 15px 12px 45px; border-radius: 14px; border: 1.5px solid #e2e8f0; outline: none; font-size: 0.95rem; }
+        .search-box i { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: var(--text-muted); }
+        .month-picker { padding: 0 15px; border-radius: 14px; border: 1.5px solid #e2e8f0; font-weight: 700; background: white; cursor: pointer; outline: none; }
+
+        /* Grid */
+        .grid { display: grid; gap: 20px; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); }
+
+        /* Card */
+        .card { background: white; border-radius: 24px; border: 1px solid #f1f5f9; display: flex; flex-direction: column; overflow: hidden; transition: 0.3s ease; position: relative; }
+        .card:hover { transform: translateY(-8px); box-shadow: 0 20px 30px -10px rgba(0,0,0,0.1); }
+        
+        .card.contest { border-top: 6px solid var(--color-contest); }
+        .card.workshop { border-top: 6px solid var(--color-workshop); }
+        .card.activity { border-top: 6px solid var(--color-activity); }
+        .card.closed { border-top: 6px solid var(--color-closed); opacity: 0.8; filter: grayscale(0.5); }
+
+        .card-head { padding: 20px 20px 10px; }
+        .tag-line { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+        .type-tag { font-size: 0.65rem; font-weight: 800; padding: 4px 10px; border-radius: 6px; text-transform: uppercase; }
+        .contest .type-tag { background: rgba(245,158,11,0.1); color: var(--color-contest); }
+        .workshop .type-tag { background: rgba(139,92,246,0.1); color: var(--color-workshop); }
+        .activity .type-tag { background: rgba(14,165,233,0.1); color: var(--color-activity); }
+        
+        .status-tag { font-size: 0.7rem; font-weight: 700; }
+        .status-active { color: #10b981; }
+
+        .card-title { font-size: 1.05rem; font-weight: 800; margin: 0; color: #0f172a; line-height: 1.4; height: 3rem; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+
+        .card-body { padding: 0 20px 15px; flex: 1; }
+        .meta-group { display: flex; flex-direction: column; gap: 10px; margin-top: 15px; }
+        .meta-row { display: flex; gap: 10px; font-size: 0.85rem; }
+        .meta-row i { color: var(--it-blue); width: 16px; margin-top: 3px; }
+        .meta-text b { display: block; font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+        .meta-text p { margin: 0; font-weight: 600; color: #334155; display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden; }
+
+        .card-foot { padding: 15px 20px 20px; display: flex; gap: 8px; border-top: 1px solid #f8fafc; }
+        .btn { height: 44px; border-radius: 12px; font-weight: 700; font-size: 0.8rem; display: flex; align-items: center; justify-content: center; border: none; cursor: pointer; transition: 0.2s; text-decoration: none; }
+        .btn-detail { background: #f1f5f9; color: var(--text-main); flex: 1; }
+        .btn-reg { background: var(--it-navy); color: white; flex: 2; }
+        .btn-share { width: 44px; background: white; border: 1.5px solid #e2e8f0; color: var(--text-muted); }
+
+        /* Modal */
+        .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15,23,42,0.7); backdrop-filter: blur(8px); display: none; justify-content: center; align-items: center; z-index: 9999; padding: 15px; }
+        .modal-box { background: white; width: 100%; max-width: 600px; max-height: 90vh; border-radius: 28px; overflow-y: auto; animation: pop 0.3s ease; }
+        @keyframes pop { from { transform: scale(0.9); opacity: 0; } }
+        .modal-h { padding: 30px 30px 15px; border-bottom: 1px solid #f1f5f9; position: sticky; top: 0; background: white; z-index: 5; }
+        .modal-b { padding: 20px 30px 30px; }
+        .m-item { margin-bottom: 18px; }
+        .m-item label { font-size: 0.7rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase; display: block; margin-bottom: 4px; }
+        .m-item p { margin: 0; font-weight: 600; line-height: 1.5; white-space: pre-line; }
+
+        /* Pagination */
+        .pagination { display: flex; justify-content: center; gap: 8px; margin-top: 40px; }
+        .p-btn { width: 40px; height: 40px; border-radius: 10px; border: 1px solid #e2e8f0; background: white; font-weight: 700; cursor: pointer; transition: 0.2s; }
+        .p-btn.active { background: var(--it-navy); color: white; border-color: var(--it-navy); }
+
+        .loader { text-align: center; padding: 100px; grid-column: 1/-1; color: var(--text-muted); font-weight: 600; }
     </style>
 </head>
 <body>
 
-<div class="container py-5">
-    <div class="row g-4">
-        <!-- Panel nhập liệu -->
-        <div class="col-lg-5">
-            <div class="card h-100">
-                <div class="header-section text-center">
-                    <h4 class="mb-1 fw-800">🤖 AI Event Parser</h4>
-                    <p class="mb-0 opacity-75">Trích xuất dữ liệu thông minh</p>
-                </div>
-                <div class="card-body p-4">
-                    <!-- Bọc form để fix lỗi cảnh báo DOM password -->
-                    <form onsubmit="return false;">
-                        <div class="mb-3">
-                            <label class="form-label text-primary">1. Gemini API Key</label>
-                            <input type="password" id="apiKey" class="form-control" placeholder="Dán mã API từ aistudio.google.com" autocomplete="current-password">
-                        </div>
-                    </form>
-                    <div class="mb-4">
-                        <label class="form-label">2. Nội dung thông báo</label>
-                        <textarea id="inputText" class="form-control" style="height: 320px;" placeholder="Dán tin nhắn Zalo/Messenger tại đây..."></textarea>
-                    </div>
-                    <button class="btn btn-primary w-100 btn-lg fw-bold shadow-sm py-3" onclick="phanTichVoiAI()" id="btnAI">
-                        ✨ BẮT ĐẦU PHÂN TÍCH
-                    </button>
-                    
-                    <div id="loading" class="text-center mt-4 ai-loading">
-                        <div class="spinner-border text-primary" role="status"></div>
-                        <p class="mt-2 text-muted fst-italic">AI đang xử lý dữ liệu...</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Panel kết quả -->
-        <div class="col-lg-7">
-            <div class="card h-100">
-                <div class="card-header bg-white border-bottom p-3 d-flex justify-content-between align-items-center">
-                    <h5 class="mb-0 fw-bold text-dark">Kết quả trích xuất</h5>
-                    <span id="methodBadge" class="badge bg-secondary status-badge">Chờ dữ liệu</span>
-                </div>
-                <div class="card-body p-4">
-                    <div class="row g-3">
-                        <div class="col-12">
-                            <label class="form-label">Tên chương trình</label>
-                            <input type="text" id="res_ten" class="form-control fw-bold text-primary">
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label">Thời gian</label>
-                            <textarea id="res_thoigian" class="form-control" rows="2"></textarea>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label">Địa điểm</label>
-                            <textarea id="res_diadiem" class="form-control" rows="2"></textarea>
-                        </div>
-                        <div class="col-md-4">
-                            <label class="form-label">Số lượng</label>
-                            <input type="text" id="res_soluong" class="form-control fw-bold">
-                        </div>
-                        <div class="col-md-4">
-                            <label class="form-label">Trang phục</label>
-                            <input type="text" id="res_trangphuc" class="form-control">
-                        </div>
-                        <div class="col-md-4">
-                            <label class="form-label text-danger">Hạn đăng ký</label>
-                            <input type="text" id="res_han" class="form-control border-danger">
-                        </div>
-                        <div class="col-12">
-                            <label class="form-label">Quyền lợi</label>
-                            <input type="text" id="res_quyenloi" class="form-control">
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label text-success">Link đăng ký</label>
-                            <input type="text" id="res_link" class="form-control border-success">
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label">Link nhóm</label>
-                            <input type="text" id="res_linknhom" class="form-control">
-                        </div>
-                        
-                        <!-- Đã fix các ID ở đây -->
-                        <div class="col-md-4">
-                            <label class="form-label">Đơn vị phụ trách</label>
-                            <select id="res_donvi" class="form-select border-warning">
-                                <option value="KHOA CNTT-TT">KHOA CNTT-TT</option>
-                                <option value="ĐOÀN THANH NIÊN">ĐOÀN THANH NIÊN</option>
-                                <option value="HỘI SINH VIÊN">HỘI SINH VIÊN</option>
-                                <option value="P.CTSV">P.CTSV</option>
-                                <option value="Tỉnh Đoàn">Tỉnh Đoàn</option>
-                                <option value="Hội Sinh viên Tỉnh">Hội Sinh viên Tỉnh</option>
-                            </select>
-                        </div>
-                        <div class="col-md-4">
-                            <label class="form-label">Phân loại</label>
-                            <select id="res_loai" class="form-select border-warning">
-                                <option value="HOẠT ĐỘNG">HOẠT ĐỘNG</option>
-                                <option value="CUỘC THI">CUỘC THI</option>
-                                <option value="WORKSHOP">WORKSHOP</option>
-                            </select>
-                        </div>
-                        <div class="col-md-4">
-                            <label class="form-label">Trạng thái</label>
-                            <select id="res_trangthai" class="form-select">
-                                <option value="còn">Còn hạn</option>
-                                <option value="ngưng">Ngưng</option>
-                            </select>
-                        </div>
-                        <div class="col-12">
-                            <label class="form-label">Ghi chú quan trọng</label>
-                            <textarea id="res_ghichu" class="form-control" rows="2"></textarea>
-                        </div>
-                    </div>
-
-                    <button class="btn btn-success w-100 btn-lg mt-4 fw-bold shadow py-3" onclick="guiLenSheet()" id="btnSave">
-                        LƯU VÀO GOOGLE SHEET <i class="fa-solid fa-paper-plane ms-2"></i>
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
+<div class="hero">
+    <h2>ĐOÀN - HỘI KHOA CÔNG NGHỆ THÔNG TIN - TRUYỀN THÔNG </h2>
+    <h3>TRANG THÔNG TIN VÀ SỰ KIỆN</h3>
+    <div class="stats-badge" id="activityCount">Đang kết nối...</div>
 </div>
 
+<div class="container">
+    <div class="toolbar">
+        <div class="filter-tabs" id="typeTabs">
+            <button class="tab-btn active" onclick="setTab('TẤT CẢ')">Tất cả</button>
+            <button class="tab-btn" onclick="setTab('CUỘC THI')">Cuộc thi</button>
+            <button class="tab-btn" onclick="setTab('WORKSHOP')">Workshop</button>
+            <button class="tab-btn" onclick="setTab('HOẠT ĐỘNG')">Hoạt động</button>
+        </div>
+        <div class="search-row">
+            <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" id="searchInput" placeholder="Tìm tên hoạt động, đơn vị..." oninput="onSearch()">
+            </div>
+            <select id="monthFilter" class="month-picker" onchange="onMonth()">
+                <option value="ALL">Mọi tháng</option>
+                <option value="01">Tháng 1</option><option value="02">Tháng 2</option><option value="03">Tháng 3</option>
+                <option value="04">Tháng 4</option><option value="05">Tháng 5</option><option value="06">Tháng 6</option>
+                <option value="07">Tháng 7</option><option value="08">Tháng 8</option><option value="09">Tháng 9</option>
+                <option value="10">Tháng 10</option><option value="11">Tháng 11</option><option value="12">Tháng 12</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="grid" id="mainGrid">
+        <div class="loader">Đang tải dữ liệu hoạt động...</div>
+    </div>
+
+    <div class="pagination" id="pagination"></div>
+</div>
+
+<!-- Detail Modal -->
+<div class="modal" id="modalOverlay" onclick="closeM(event)">
+    <div class="modal-box" onclick="event.stopPropagation()">
+        <div class="modal-h">
+            <h2 id="mTitle" style="margin:0; font-size:1.3rem;"></h2>
+        </div>
+        <div class="modal-b" id="mBody"></div>
+        <div class="card-foot" id="mFooter"></div>
+    </div>
+</div>
+<img src="https://api.visitorbadge.io/api/combined?path=https%3A%2F%2Fgithub.com%2FZINNODNTU%2Fhoatdongsukien&label=Lượt%20truy%20cập&labelColor=%2337d67a&countColor=%23263238&style=flat" alt="Views" />
 <script>
-// Tải API Key từ LocalStorage
-window.onload = function() {
-    const savedKey = localStorage.getItem("gemini_api_key");
-    if (savedKey) document.getElementById("apiKey").value = savedKey;
-};
+    const API = "https://opensheet.elk.sh/1bIoZD9x1DbtonKqhRqVf_oDGEwyiQTYzlAgG8Bi0vX4/TONGHOP";
+    let db = [], filtered = [], currPage = 1;
+    let currTab = 'TẤT CẢ', currMonth = 'ALL';
+    const limit = 12;
 
-async function phanTichVoiAI() {
-    const key = document.getElementById("apiKey").value.trim();
-    const text = document.getElementById("inputText").value.trim();
+    const isClosed = (s) => ["ngưng", "hết", "đóng", "dừng"].some(k => (s||"").toLowerCase().includes(k));
 
-    if (!key || !text) { alert("Vui lòng nhập đầy đủ thông tin!"); return; }
-
-    localStorage.setItem("gemini_api_key", key);
-    document.getElementById("loading").style.display = "block";
-    document.getElementById("btnAI").disabled = true;
-
-    // Sử dụng Gemini 1.5 Flash (Model ổn định và nhanh nhất hiện tại)
-    const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${key}`;
-
-    const prompt = `Phân tích thông báo hoạt động sau và trả về DUY NHẤT 1 chuỗi JSON.
-    Cấu trúc: {"ten":"", "thoigian":"", "diadiem":"", "soluong":"", "trangphuc":"", "quyenloi":"", "han":"", "link":"", "loai":"HOẠT ĐỘNG", "ghichu":""}.
-    Lưu ý: "han" lấy định dạng DD/MM/YYYY. Nếu không thấy dữ liệu hãy để trống "". 
-    Nội dung: ${text}`;
-
-    try {
-        const response = await fetch(API_URL, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
-        });
-
-        const data = await response.json();
-        if (data.error) throw new Error(data.error.message);
-
-        let aiText = data.candidates[0].content.parts[0].text;
-        const jsonMatch = aiText.match(/\{[\s\S]*\}/);
-        if (!jsonMatch) throw new Error("AI trả về kết quả không hợp lệ.");
-        
-        const res = JSON.parse(jsonMatch[0]);
-
-        // Đổ dữ liệu vào input
-        document.getElementById("res_ten").value = res.ten || "";
-        document.getElementById("res_thoigian").value = res.thoigian || "";
-        document.getElementById("res_diadiem").value = res.diadiem || "";
-        document.getElementById("res_soluong").value = res.soluong || "";
-        document.getElementById("res_trangphuc").value = res.trangphuc || "";
-        document.getElementById("res_han").value = res.han || "";
-        document.getElementById("res_quyenloi").value = res.quyenloi || "";
-        document.getElementById("res_link").value = res.link || "";
-        document.getElementById("res_loai").value = (res.loai || "HOẠT ĐỘNG").toUpperCase();
-        document.getElementById("res_ghichu").value = res.ghichu || "";
-        
-        document.getElementById("methodBadge").innerText = "Đã trích xuất xong ✨";
-        document.getElementById("methodBadge").className = "badge bg-success status-badge";
-
-    } catch (error) {
-        alert("Lỗi AI: " + error.message);
-    } finally {
-        document.getElementById("loading").style.display = "none";
-        document.getElementById("btnAI").disabled = false;
+    async function load() {
+        try {
+            const res = await fetch(API);
+            const data = await res.json();
+            // Lọc hàng trống và sắp xếp: Đang mở lên trước, Hết hạn xuống sau. Trong mỗi nhóm STT cao hơn lên trước.
+            const clean = data.filter(i => i["Tên chương trình"]).reverse();
+            const open = clean.filter(i => !isClosed(i["Trạng thái"]));
+            const closed = clean.filter(i => isClosed(i["Trạng thái"]));
+            db = [...open, ...closed];
+            apply();
+        } catch (e) { document.getElementById('mainGrid').innerHTML = "Lỗi tải dữ liệu!"; }
     }
-}
 
-async function guiLenSheet() {
-    // URL Web App Google Script của bạn
-    const API_URL = "https://script.google.com/macros/s/AKfycbzvlmB6kLjRRkDqf1xzi6Y8pu8mjpl6q3RcU2KN1_5txxQaiK3lUtygoGI-TR4AfkGD/exec"; 
-
-    // Lấy toàn bộ dữ liệu từ form
-    // Đã fix lỗi null value bằng cách khớp đúng ID trong HTML
-    const payload = {
-        ten: document.getElementById("res_ten").value,
-        thoigian: document.getElementById("res_thoigian").value,
-        diadiem: document.getElementById("res_diadiem").value,
-        trangphuc: document.getElementById("res_trangphuc").value,
-        soluong: document.getElementById("res_soluong").value,
-        quyenloi: document.getElementById("res_quyenloi").value,
-        han: document.getElementById("res_han").value,
-        link: document.getElementById("res_link").value,
-        linknhom: document.getElementById("res_linknhom").value,
-        donvi: document.getElementById("res_donvi").value, // Đã fix ID
-        trangthai: document.getElementById("res_trangthai").value,
-        loai: document.getElementById("res_loai").value,
-        ghichu: document.getElementById("res_ghichu").value
-    };
-
-    const btn = document.getElementById("btnSave");
-    btn.disabled = true;
-    btn.innerText = "ĐANG LƯU...";
-
-    try {
-        // Gửi dữ liệu qua Apps Script
-        await fetch(API_URL, {
-            method: "POST",
-            mode: "no-cors", 
-            body: JSON.stringify(payload)
+    function apply() {
+        const query = document.getElementById('searchInput').value.toLowerCase();
+        filtered = db.filter(i => {
+            const mTab = currTab === 'TẤT CẢ' || (i["Loại"] || "").toUpperCase() === currTab;
+            const mSrc = i["Tên chương trình"].toLowerCase().includes(query) || (i["Đơn vị phụ trách"]||"").toLowerCase().includes(query);
+            let mMo = true;
+            if (currMonth !== 'ALL') {
+                const d = i["Thời gian"] || "";
+                mMo = d.includes(`/${currMonth}/`) || d.includes(`-${currMonth}-`) || d.toLowerCase().includes(`tháng ${parseInt(currMonth)}`);
+            }
+            return mTab && mSrc && mMo;
         });
-        
-        alert("Thành công! Dữ liệu đã được gửi tới Google Sheet.");
-    } catch (e) {
-        alert("Lỗi khi lưu: " + e.message);
-    } finally {
-        btn.disabled = false;
-        btn.innerText = "LƯU VÀO GOOGLE SHEET ➔";
+        currPage = 1;
+        render();
     }
-}
+
+    function render() {
+        const grid = document.getElementById('mainGrid');
+        grid.innerHTML = "";
+        
+        // Cập nhật bộ đếm số lượng
+        document.getElementById('activityCount').innerText = `Tìm thấy ${filtered.length} hoạt động`;
+
+        const start = (currPage - 1) * limit;
+        const slice = filtered.slice(start, start + limit);
+
+        if (!slice.length) { grid.innerHTML = `<div class="loader">Không tìm thấy hoạt động nào phù hợp.</div>`; return; }
+
+        slice.forEach(i => {
+            const closed = isClosed(i["Trạng thái"]);
+            const type = (i["Loại"] || "HOẠT ĐỘNG").toUpperCase();
+            let cClass = type === "CUỘC THI" ? "contest" : type === "WORKSHOP" ? "workshop" : "activity";
+            if(closed) cClass = "closed";
+
+            const card = document.createElement('div');
+            card.className = `card ${cClass}`;
+            card.onclick = () => showM(i);
+            card.innerHTML = `
+                <div class="card-head">
+                    <div class="tag-line">
+                        <span class="type-tag">${type}</span>
+                        <span class="status-tag ${closed ? '' : 'status-active'}">${closed ? 'Hết hạn' : 'Đang mở'}</span>
+                    </div>
+                    <h3 class="card-title">${i["Tên chương trình"]}</h3>
+                </div>
+                <div class="card-body">
+                    <div class="meta-group">
+                        <div class="meta-row"><i class="fas fa-clock"></i><div class="meta-text"><b>Thời gian & Hạn chót</b><p>${i["Thời gian"]}</p><small style="color:var(--danger)">Hạn: ${i["Hạn đăng ký"] || 'Đến khi đủ'}</small></div></div>
+                        <div class="meta-row"><i class="fas fa-gift"></i><div class="meta-text"><b>Quyền lợi</b><p>${i["Quyền lợi"] || 'Theo quy định'}</p></div></div>
+                        <div class="meta-row"><i class="fas fa-building"></i><div class="meta-text"><b>Đơn vị</b><p>${i["Đơn vị phụ trách"] || 'Khoa CNTT'}</p></div></div>
+                    </div>
+                </div>
+                <div class="card-foot">
+                    <button class="btn btn-detail">Chi tiết</button>
+                    <a href="${closed ? '#' : i["Link đăng ký"]}" target="_blank" class="btn btn-reg" onclick="event.stopPropagation()">${closed ? 'Đã đóng' : 'Đăng ký ngay'}</a>
+                    <button class="btn btn-share" onclick="event.stopPropagation(); share('${i["Tên chương trình"]}', '${i["Link đăng ký"]}')"><i class="fas fa-share-alt"></i></button>
+                </div>
+            `;
+            grid.appendChild(card);
+        });
+        renderPag();
+    }
+
+    function renderPag() {
+        const total = Math.ceil(filtered.length / limit);
+        const nav = document.getElementById('pagination'); nav.innerHTML = "";
+        if(total <= 1) return;
+        for(let i=1; i<=total; i++) {
+            const b = document.createElement('button');
+            b.className = `p-btn ${i === currPage ? 'active' : ''}`;
+            b.innerText = i;
+            b.onclick = () => { currPage = i; render(); window.scrollTo({top: 250, behavior:'smooth'}); };
+            nav.appendChild(b);
+        }
+    }
+
+    function showM(i) {
+        document.getElementById('mTitle').innerText = i["Tên chương trình"];
+        const rows = [
+            { l: '⏰ Thời gian', v: i["Thời gian"] },
+            { l: '📍 Địa điểm', v: i["Địa điểm"] },
+            { l: '📅 Hạn đăng ký', v: i["Hạn đăng ký"] },
+            { l: '👕 Trang phục / SL', v: `${i["Trang phục"] || 'Tự do'} • ${i["Số lượng"] || 'Không giới hạn'}` },
+            { l: '💎 Quyền lợi', v: i["Quyền lợi"] },
+            { l: '🏢 Đơn vị', v: i["Đơn vị phụ trách"] },
+            { l: '📝 Ghi chú', v: i["Ghi chú"] }
+        ];
+        document.getElementById('mBody').innerHTML = rows.filter(r => r.v).map(r => `<div class="m-item"><label>${r.l}</label><p>${r.v}</p></div>`).join('');
+        const closed = isClosed(i["Trạng thái"]);
+        document.getElementById('mFooter').innerHTML = `
+            <a href="${closed ? '#' : i["Link đăng ký"]}" target="_blank" class="btn btn-reg" style="flex:2">${closed ? 'HẾT HẠN' : 'ĐĂNG KÝ THAM GIA'}</a>
+            ${i["Link nhóm"] ? `<a href="${i["Link nhóm"]}" target="_blank" class="btn btn-detail">VÀO NHÓM</a>` : ''}
+            <button class="btn btn-detail" onclick="closeM()">ĐÓNG</button>
+        `;
+        document.getElementById('modalOverlay').style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeM(e) { if(!e || e.target.id === 'modalOverlay') { document.getElementById('modalOverlay').style.display = 'none'; document.body.style.overflow = 'auto'; } }
+
+    function setTab(t) {
+        currTab = t;
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.innerText.includes(t.charAt(0) + t.slice(1).toLowerCase()) || (t==='TẤT CẢ' && b.innerText==='Tất cả')));
+        apply();
+    }
+
+    function onSearch() { apply(); }
+    function onMonth() { currMonth = document.getElementById('monthFilter').value; apply(); }
+    function share(t, u) { 
+        const link = u || window.location.href;
+        if(navigator.share) navigator.share({ title: t, url: link }).catch(() => {});
+        else { navigator.clipboard.writeText(link); alert("Đã copy link đăng ký!"); }
+    }
+
+    load();
 </script>
+
 </body>
 </html>
