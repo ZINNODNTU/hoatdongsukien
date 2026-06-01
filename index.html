@@ -744,6 +744,19 @@
         .chat-msg.bot .chat-bubble { background: var(--bg-card); border: 1px solid var(--border-color); }
         .chat-msg.user .chat-bubble { background: var(--it-blue); color: white; }
 
+        .chatbot-suggestion-toggle {
+            border: 1px solid rgba(255,255,255,0.35);
+            background: rgba(255,255,255,0.14);
+            color: white;
+            min-width: 78px;
+            height: 34px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 800;
+            font-size: 0.76rem;
+            margin-right: 8px;
+        }
+
         .chatbot-suggestions {
             padding: 10px 12px 0;
             display: flex;
@@ -751,6 +764,10 @@
             flex-wrap: wrap;
             background: var(--bg-card);
             border-top: 1px solid var(--border-color);
+        }
+
+        .chatbot-suggestions.hidden {
+            display: none;
         }
         .chat-chip {
             border: 1px solid var(--border-color);
@@ -856,10 +873,13 @@
             <strong>Chatbot hoạt động</strong>
             <small>Đọc dữ liệu trực tiếp từ danh sách</small>
         </div>
-        <button class="chatbot-close" onclick="toggleChatbot(false)"><i class="fas fa-times"></i></button>
+        <div style="display:flex; align-items:center; gap:0;">
+            <button class="chatbot-suggestion-toggle" id="suggestionToggleBtn" onclick="toggleSuggestions()" title="Ẩn/hiện phần gợi ý">Ẩn gợi ý</button>
+            <button class="chatbot-close" onclick="toggleChatbot(false)"><i class="fas fa-times"></i></button>
+        </div>
     </div>
     <div class="chatbot-messages" id="chatMessages"></div>
-    <div class="chatbot-suggestions">
+    <div class="chatbot-suggestions" id="chatSuggestions">
         <button class="chat-chip" onclick="askBot('Thống kê tháng 5')">Thống kê tháng 5</button>
         <button class="chat-chip" onclick="askBot('Hoạt động đang mở')">Đang mở</button>
         <button class="chat-chip" onclick="askBot('Workshop tháng 5')">Workshop tháng 5</button>
@@ -1233,11 +1253,30 @@
         const panel = document.getElementById('chatbotPanel');
         const open = typeof force === 'boolean' ? force : !panel.classList.contains('open');
         panel.classList.toggle('open', open);
+        if (open) applySuggestionState();
         if (open && !document.getElementById('chatMessages').dataset.started) {
             document.getElementById('chatMessages').dataset.started = '1';
             addChatMessage('bot', 'Chào bạn! Mình có thể trả lời theo dữ liệu bảng: thống kê theo tháng, tìm hoạt động, link đăng ký, link nhóm, địa điểm, thời gian, hạn đăng ký, quyền lợi CTXH, trang phục, đơn vị phụ trách, trạng thái còn mở/đã đóng. Gõ “hướng dẫn” để xem mẫu câu hỏi.');
         }
     }
+
+    function applySuggestionState() {
+        const suggestions = document.getElementById('chatSuggestions');
+        const btn = document.getElementById('suggestionToggleBtn');
+        if (!suggestions || !btn) return;
+        const hidden = localStorage.getItem('hideChatSuggestions') === '1';
+        suggestions.classList.toggle('hidden', hidden);
+        btn.innerText = hidden ? 'Hiện gợi ý' : 'Ẩn gợi ý';
+        btn.title = hidden ? 'Hiện phần gợi ý câu hỏi' : 'Ẩn phần gợi ý câu hỏi';
+    }
+
+    function toggleSuggestions() {
+        const hidden = localStorage.getItem('hideChatSuggestions') === '1';
+        localStorage.setItem('hideChatSuggestions', hidden ? '0' : '1');
+        applySuggestionState();
+    }
+
+    document.addEventListener('DOMContentLoaded', applySuggestionState);
 
     function addChatMessage(role, text) {
         const box = document.getElementById('chatMessages');
