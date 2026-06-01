@@ -175,7 +175,7 @@
 
         .search-row { 
             display: grid; 
-            grid-template-columns: 1fr auto; 
+            grid-template-columns: 1fr auto auto; 
             gap: 12px; 
             margin-top: 20px; 
         }
@@ -224,6 +224,28 @@
         
         .month-picker:hover {
             border-color: var(--it-blue);
+        }
+
+        .export-btn {
+            padding: 0 18px;
+            border-radius: 14px;
+            border: 2px solid var(--it-green);
+            font-weight: 800;
+            background: var(--it-green);
+            color: white;
+            cursor: pointer;
+            outline: none;
+            transition: all 0.3s ease;
+            min-height: 52px;
+            white-space: nowrap;
+        }
+        .export-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(16,185,129,0.25);
+        }
+        @media (max-width: 640px) {
+            .search-row { grid-template-columns: 1fr; }
+            .month-picker, .export-btn { min-height: 52px; }
         }
 
         /* Grid */
@@ -648,6 +670,142 @@
         .footer a:hover {
             text-decoration: underline;
         }
+
+        /* Chatbot */
+        .chatbot-toggle {
+            position: fixed;
+            right: 22px;
+            bottom: 22px;
+            width: 58px;
+            height: 58px;
+            border-radius: 50%;
+            border: none;
+            background: linear-gradient(135deg, var(--it-blue), var(--it-green));
+            color: white;
+            box-shadow: var(--shadow-lg);
+            cursor: pointer;
+            z-index: 9998;
+            font-size: 1.35rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .chatbot-panel {
+            position: fixed;
+            right: 22px;
+            bottom: 92px;
+            width: min(390px, calc(100vw - 32px));
+            height: min(620px, calc(100vh - 120px));
+            background: var(--bg-card);
+            color: var(--text-main);
+            border: 1px solid var(--border-color);
+            border-radius: 22px;
+            box-shadow: var(--shadow-lg);
+            z-index: 9998;
+            display: none;
+            overflow: hidden;
+        }
+
+        .chatbot-panel.open { display: flex; flex-direction: column; }
+
+        .chatbot-header {
+            padding: 16px 18px;
+            background: linear-gradient(135deg, #1e40af 0%, #1e293b 100%);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .chatbot-header strong { display: block; font-size: 0.98rem; }
+        .chatbot-header small { opacity: 0.82; font-weight: 600; }
+        .chatbot-close { background: rgba(255,255,255,0.16); color: white; border: 0; width: 34px; height: 34px; border-radius: 10px; cursor: pointer; }
+
+        .chatbot-messages {
+            flex: 1;
+            padding: 16px;
+            overflow-y: auto;
+            background: var(--bg-body);
+        }
+
+        .chat-msg { display: flex; margin-bottom: 12px; }
+        .chat-msg.user { justify-content: flex-end; }
+        .chat-bubble {
+            max-width: 88%;
+            padding: 11px 13px;
+            border-radius: 15px;
+            font-size: 0.88rem;
+            line-height: 1.5;
+            white-space: pre-line;
+            word-break: break-word;
+        }
+        .chat-msg.bot .chat-bubble { background: var(--bg-card); border: 1px solid var(--border-color); }
+        .chat-msg.user .chat-bubble { background: var(--it-blue); color: white; }
+
+        .chatbot-suggestion-toggle {
+            border: 1px solid rgba(255,255,255,0.35);
+            background: rgba(255,255,255,0.14);
+            color: white;
+            min-width: 78px;
+            height: 34px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 800;
+            font-size: 0.76rem;
+            margin-right: 8px;
+        }
+
+        .chatbot-suggestions {
+            padding: 10px 12px 0;
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            background: var(--bg-card);
+            border-top: 1px solid var(--border-color);
+        }
+
+        .chatbot-suggestions.hidden {
+            display: none;
+        }
+        .chat-chip {
+            border: 1px solid var(--border-color);
+            background: var(--bg-meta);
+            color: var(--text-main);
+            border-radius: 999px;
+            padding: 7px 10px;
+            font-size: 0.78rem;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .chatbot-form {
+            display: flex;
+            gap: 8px;
+            padding: 12px;
+            background: var(--bg-card);
+            border-top: 1px solid var(--border-color);
+        }
+        .chatbot-form input {
+            flex: 1;
+            min-width: 0;
+            border: 2px solid var(--border-color);
+            background: var(--bg-card);
+            color: var(--text-main);
+            border-radius: 13px;
+            padding: 11px 12px;
+            outline: none;
+        }
+        .chatbot-form button {
+            width: 46px;
+            border: 0;
+            border-radius: 13px;
+            background: var(--it-navy);
+            color: white;
+            cursor: pointer;
+        }
+
     </style>
 </head>
 <body>
@@ -683,6 +841,7 @@
                 <option value="07">Tháng 7</option><option value="08">Tháng 8</option><option value="09">Tháng 9</option>
                 <option value="10">Tháng 10</option><option value="11">Tháng 11</option><option value="12">Tháng 12</option>
             </select>
+            <button class="export-btn" onclick="exportMonthFromSelect()"><i class="fas fa-file-excel"></i> Xuất file tháng</button>
         </div>
     </div>
 
@@ -701,6 +860,39 @@
         <div class="modal-b" id="mBody"></div>
         <div class="card-foot" id="mFooter"></div>
     </div>
+</div>
+
+
+<button class="chatbot-toggle" onclick="toggleChatbot()" title="Chatbot tư vấn hoạt động">
+    <i class="fas fa-comments"></i>
+</button>
+
+<div class="chatbot-panel" id="chatbotPanel">
+    <div class="chatbot-header">
+        <div>
+            <strong>Chatbot hoạt động</strong>
+            <small>Đọc dữ liệu trực tiếp từ danh sách</small>
+        </div>
+        <div style="display:flex; align-items:center; gap:0;">
+            <button class="chatbot-suggestion-toggle" id="suggestionToggleBtn" onclick="toggleSuggestions()" title="Ẩn/hiện phần gợi ý">Ẩn gợi ý</button>
+            <button class="chatbot-close" onclick="toggleChatbot(false)"><i class="fas fa-times"></i></button>
+        </div>
+    </div>
+    <div class="chatbot-messages" id="chatMessages"></div>
+    <div class="chatbot-suggestions" id="chatSuggestions">
+        <button class="chat-chip" onclick="askBot('Thống kê tháng 5')">Thống kê tháng 5</button>
+        <button class="chat-chip" onclick="askBot('Hoạt động đang mở')">Đang mở</button>
+        <button class="chat-chip" onclick="askBot('Workshop tháng 5')">Workshop tháng 5</button>
+        <button class="chat-chip" onclick="askBot('Cuộc thi tháng 5')">Cuộc thi tháng 5</button>
+        <button class="chat-chip" onclick="askBot('Hoạt động cộng 8 giờ CTXH')">8 giờ CTXH</button>
+        <button class="chat-chip" onclick="askBot('Link đăng ký Job Fair')">Link Job Fair</button>
+        <button class="chat-chip" onclick="askBot('Xuất file tháng 5')">Xuất tháng 5</button>
+        <button class="chat-chip" onclick="askBot('Hướng dẫn')">Hướng dẫn</button>
+    </div>
+    <form class="chatbot-form" onsubmit="sendChat(event)">
+        <input id="chatInput" type="text" placeholder="Hỏi: link Job Fair, quyền lợi CTXH tháng 5, địa điểm workshop...">
+        <button type="submit"><i class="fas fa-paper-plane"></i></button>
+    </form>
 </div>
 
 <div class="footer">
@@ -736,7 +928,7 @@
             let mMo = true;
             if (currMonth !== 'ALL') {
                 const d = i["Thời gian"] || "";
-                mMo = d.includes(`/${currMonth}/`) || d.includes(`-${currMonth}-`) || d.toLowerCase().includes(`tháng ${parseInt(currMonth)}`);
+                mMo = activityHasMonth(i, currMonth);
             }
             return mTab && mSrc && mMo;
         });
@@ -862,6 +1054,437 @@
     function setTab(t) { currTab = t; document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.innerText.toUpperCase() === t)); apply(); }
     function onSearch() { apply(); }
     function onMonth() { currMonth = document.getElementById('monthFilter').value; apply(); }
+
+
+
+    // Robust month/date detection for many Vietnamese time formats:
+    // 09/05/2026, 09/5/2026, 07/05 đến 31/05/2026, 14-16/05/2026,
+    // ngày 31 tháng 5 năm 2026, Tháng 05/2026, 2026-05-09, 05/2026.
+    function normalizeText(str) {
+        return (str || '').toString().normalize('NFD')
+            .replace(/[\u0300-\u036f]/g, '')
+            .replace(/đ/g, 'd').replace(/Đ/g, 'D')
+            .toLowerCase()
+            .replace(/\s+/g, ' ')
+            .trim();
+    }
+
+    function uniqueNumbersFromRegex(text, regex, groupIndex = 1) {
+        const nums = [];
+        let match;
+        while ((match = regex.exec(text)) !== null) {
+            const n = parseInt(match[groupIndex], 10);
+            if (Number.isFinite(n) && n >= 1 && n <= 12) nums.push(String(n).padStart(2, '0'));
+        }
+        return nums;
+    }
+
+    function extractMonths(timeText) {
+        const raw = (timeText || '').toString();
+        const text = normalizeText(raw).replace(/[–—]/g, '-');
+        const months = new Set();
+
+        uniqueNumbersFromRegex(text, /\b\d{1,2}\s*[\/\-]\s*(\d{1,2})(?:\s*[\/\-]\s*\d{2,4})?/g).forEach(m => months.add(m));
+        uniqueNumbersFromRegex(text, /\b\d{4}\s*[\/\-]\s*(\d{1,2})\s*[\/\-]\s*\d{1,2}\b/g).forEach(m => months.add(m));
+        uniqueNumbersFromRegex(text, /\bthang\s*(\d{1,2})(?:\s*[\/\-]\s*\d{2,4}|\s*nam\s*\d{2,4})?/g).forEach(m => months.add(m));
+        uniqueNumbersFromRegex(text, /\bngay\s*\d{1,2}\s*thang\s*(\d{1,2})\b/g).forEach(m => months.add(m));
+        uniqueNumbersFromRegex(text, /\b(\d{1,2})\s*[\/\-]\s*\d{4}\b/g).forEach(m => months.add(m));
+
+        return [...months];
+    }
+
+    function hasMonth(timeText, month) {
+        return extractMonths(timeText).includes(String(month).padStart(2, '0'));
+    }
+
+    function activityHasMonth(item, month) {
+        const fields = [item['Thời gian'], item['Hạn đăng ký'], item['Ghi chú']];
+        return fields.some(value => hasMonth(value, month));
+    }
+
+
+    function extractFirstDateForMonth(item, month) {
+        const targetMonth = String(month).padStart(2, '0');
+        const texts = [item['Thời gian'], item['Hạn đăng ký'], item['Ghi chú']]
+            .filter(Boolean)
+            .map(v => v.toString().replace(/[–—]/g, '-'));
+        const dates = [];
+
+        function pushDate(day, mo, year) {
+            const d = parseInt(day, 10);
+            const m = parseInt(mo, 10);
+            const y = parseInt(year || '2026', 10);
+            if (Number.isFinite(d) && Number.isFinite(m) && Number.isFinite(y) && m >= 1 && m <= 12 && d >= 1 && d <= 31) {
+                if (String(m).padStart(2, '0') === targetMonth) dates.push(new Date(y, m - 1, d));
+            }
+        }
+
+        texts.forEach(text => {
+            let match;
+            // 2026-05-09 hoặc 2026/05/09
+            const ymd = /\b(\d{4})\s*[\/-]\s*(\d{1,2})\s*[\/-]\s*(\d{1,2})\b/g;
+            while ((match = ymd.exec(text)) !== null) pushDate(match[3], match[2], match[1]);
+
+            // 09/05/2026, 09-05-2026, 09/5
+            const dmy = /\b(\d{1,2})\s*[\/-]\s*(\d{1,2})(?:\s*[\/-]\s*(\d{2,4}))?\b/g;
+            while ((match = dmy.exec(text)) !== null) {
+                let year = match[3] || '2026';
+                if (year.length === 2) year = '20' + year;
+                pushDate(match[1], match[2], year);
+            }
+
+            // ngày 30 tháng 5 năm 2026
+            const vn = /ng[aà]y\s*(\d{1,2})\s*th[aá]ng\s*(\d{1,2})(?:\s*n[aă]m\s*(\d{4}))?/gi;
+            while ((match = vn.exec(text)) !== null) pushDate(match[1], match[2], match[3] || '2026');
+        });
+
+        if (!dates.length) return new Date(2026, parseInt(targetMonth, 10) - 1, 31, 23, 59, 59);
+        return dates.sort((a, b) => a - b)[0];
+    }
+
+    function getMonthItemsSorted(month) {
+        const mm = String(month).padStart(2, '0');
+        return db
+            .filter(item => activityHasMonth(item, mm))
+            .sort((a, b) => extractFirstDateForMonth(a, mm) - extractFirstDateForMonth(b, mm));
+    }
+
+    function htmlEscape(value) {
+        return (value ?? '').toString()
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#039;');
+    }
+
+    function exportMonthFile(month) {
+        const mm = String(month).padStart(2, '0');
+        const items = getMonthItemsSorted(mm);
+        if (!items.length) {
+            alert(`Không tìm thấy hoạt động nào trong tháng ${parseInt(mm, 10)}.`);
+            return 0;
+        }
+
+        const columns = [
+            ['STT', (_, idx) => idx + 1],
+            ['TÊN CHƯƠNG TRÌNH', item => item['Tên chương trình']],
+            ['THỜI GIAN', item => item['Thời gian']],
+            ['ĐỊA ĐIỂM', item => item['Địa điểm']],
+            ['SỐ LƯỢNG PHÂN BỔ/THỰC TẾ', item => item['Số lượng']],
+            ['TRANG PHỤC', item => item['Trang phục']],
+            ['QUYỀN LỢI', item => item['Quyền lợi']],
+            ['HẠN ĐĂNG KÝ', item => item['Hạn đăng ký']],
+            ['LINK ĐĂNG KÝ', item => item['Link đăng ký']],
+            ['LINK NHÓM', item => item['Link nhóm']],
+            ['ĐƠN VỊ PHỤ TRÁCH', item => item['Đơn vị phụ trách']],
+            ['TRẠNG THÁI', item => item['Trạng thái']],
+            ['LOẠI', item => item['Loại']],
+            ['GHI CHÚ', item => item['Ghi chú']]
+        ];
+
+        const header = columns.map(([title]) => `<th>${htmlEscape(title)}</th>`).join('');
+        const body = items.map((item, idx) => '<tr>' + columns.map(([, getter]) => `<td>${htmlEscape(getter(item, idx))}</td>`).join('') + '</tr>').join('');
+        const html = `
+            <html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40">
+            <head><meta charset="UTF-8">
+            <style>
+                table { border-collapse: collapse; font-family: Times New Roman, Arial, sans-serif; }
+                th, td { border: 1px solid #000; padding: 6px; vertical-align: middle; mso-number-format:'\\@'; }
+                th { font-weight: bold; text-align: center; background: #f2f2f2; }
+                td:nth-child(1), td:nth-child(3), td:nth-child(5) { text-align: center; }
+            </style></head>
+            <body>
+                <table>
+                    <tr><th colspan="${columns.length}">DANH SÁCH HOẠT ĐỘNG THÁNG ${parseInt(mm, 10)}/2026</th></tr>
+                    <tr>${header}</tr>
+                    ${body}
+                </table>
+            </body></html>`;
+
+        const blob = new Blob(['\ufeff', html], { type: 'application/vnd.ms-excel;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `danh_sach_hoat_dong_thang_${mm}_2026.xls`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        return items.length;
+    }
+
+    function exportMonthFromSelect() {
+        const month = document.getElementById('monthFilter').value;
+        if (month === 'ALL') {
+            alert('Bạn hãy chọn một tháng trước khi xuất file.');
+            return;
+        }
+        const total = exportMonthFile(month);
+        if (total) {
+            const t = document.getElementById('toast');
+            t.innerText = `✅ Đã xuất ${total} hoạt động tháng ${parseInt(month, 10)}`;
+            t.style.display = 'block';
+            setTimeout(() => { t.style.display = 'none'; t.innerText = '✅ Đã sao chép nội dung chia sẻ!'; }, 2500);
+        }
+    }
+
+    function detectMonthFromQuestion(question) {
+        const q = normalizeText(question);
+        let m = q.match(/thang\s*(\d{1,2})/);
+        if (!m) m = q.match(/\b(?:t|th)\s*(\d{1,2})\b/);
+        if (!m) m = q.match(/\/(\d{1,2})\b/);
+        if (!m) return null;
+        const n = parseInt(m[1], 10);
+        return (n >= 1 && n <= 12) ? String(n).padStart(2, '0') : null;
+    }
+
+    function normalizeActivityType(item) {
+        const type = normalizeText(item['Loại']);
+        const name = normalizeText(item['Tên chương trình']);
+        if (type.includes('workshop')) return 'Workshop';
+        if (type.includes('cuoc thi')) return 'Cuộc thi';
+        if (name.includes('talkshow')) return 'Khác (Talkshow)';
+        if (name.includes('giao luu van hoa') || name.includes('indonesia') || name.includes('han quoc') || name.includes('lao') || name.includes('campuchia')) return 'Giao lưu văn hóa';
+        return 'Hoạt động CTXH, hỗ trợ, sự kiện';
+    }
+
+    function toggleChatbot(force) {
+        const panel = document.getElementById('chatbotPanel');
+        const open = typeof force === 'boolean' ? force : !panel.classList.contains('open');
+        panel.classList.toggle('open', open);
+        if (open) applySuggestionState();
+        if (open && !document.getElementById('chatMessages').dataset.started) {
+            document.getElementById('chatMessages').dataset.started = '1';
+            addChatMessage('bot', 'Chào bạn! Mình có thể trả lời theo dữ liệu bảng: thống kê theo tháng, tìm hoạt động, link đăng ký, link nhóm, địa điểm, thời gian, hạn đăng ký, quyền lợi CTXH, trang phục, đơn vị phụ trách, trạng thái còn mở/đã đóng. Gõ “hướng dẫn” để xem mẫu câu hỏi.');
+        }
+    }
+
+    function applySuggestionState() {
+        const suggestions = document.getElementById('chatSuggestions');
+        const btn = document.getElementById('suggestionToggleBtn');
+        if (!suggestions || !btn) return;
+        const hidden = localStorage.getItem('hideChatSuggestions') === '1';
+        suggestions.classList.toggle('hidden', hidden);
+        btn.innerText = hidden ? 'Hiện gợi ý' : 'Ẩn gợi ý';
+        btn.title = hidden ? 'Hiện phần gợi ý câu hỏi' : 'Ẩn phần gợi ý câu hỏi';
+    }
+
+    function toggleSuggestions() {
+        const hidden = localStorage.getItem('hideChatSuggestions') === '1';
+        localStorage.setItem('hideChatSuggestions', hidden ? '0' : '1');
+        applySuggestionState();
+    }
+
+    document.addEventListener('DOMContentLoaded', applySuggestionState);
+
+    function addChatMessage(role, text) {
+        const box = document.getElementById('chatMessages');
+        const row = document.createElement('div');
+        row.className = `chat-msg ${role}`;
+        const bubble = document.createElement('div');
+        bubble.className = 'chat-bubble';
+        bubble.textContent = text;
+        row.appendChild(bubble);
+        box.appendChild(row);
+        box.scrollTop = box.scrollHeight;
+    }
+
+    function askBot(text) {
+        document.getElementById('chatInput').value = text;
+        sendChat();
+    }
+
+    function sendChat(event) {
+        if (event) event.preventDefault();
+        const input = document.getElementById('chatInput');
+        const question = input.value.trim();
+        if (!question) return;
+        addChatMessage('user', question);
+        input.value = '';
+        setTimeout(() => addChatMessage('bot', getBotReply(question)), 120);
+    }
+
+    const STOP_WORDS = new Set([
+        'cho','minh','hoi','hoi','co','khong','khong','nhung','cac','cua','va','la','ve','the','nao','bao','nhieu',
+        'thang','nam','ngay','hoat','dong','chuong','trinh','dang','ky','link','thoi','gian','dia','diem','quyen','loi',
+        'trang','phuc','han','deadline','ctxh','cong','gio','danh','sach','thong','ke','tong','hop','tim','kiem','neu','giup'
+    ]);
+
+    function countDeclaredStudents(items) {
+        return items.reduce((sum, item) => {
+            const s = (item['Số lượng'] || '').toString().replace(/\./g, '');
+            if (!s || /\/bu[oổ]i|m[oỗ]i/i.test(s)) return sum;
+            const nums = [...s.matchAll(/\d+/g)].map(x => parseInt(x[0], 10)).filter(Number.isFinite);
+            return nums.length ? sum + Math.max(...nums) : sum;
+        }, 0);
+    }
+
+    function getItemText(item) {
+        return normalizeText(Object.values(item || {}).join(' '));
+    }
+
+    function getQuestionKeywords(question) {
+        const q = normalizeText(question);
+        return q.split(/[^a-z0-9]+/)
+            .map(w => w.trim())
+            .filter(w => w.length >= 3 && !STOP_WORDS.has(w));
+    }
+
+    function scoreItemByQuestion(item, question) {
+        const keywords = getQuestionKeywords(question);
+        if (!keywords.length) return 0;
+        const name = normalizeText(item['Tên chương trình']);
+        const all = getItemText(item);
+        let score = 0;
+        keywords.forEach(w => {
+            if (name.includes(w)) score += 4;
+            else if (all.includes(w)) score += 1;
+        });
+        return score;
+    }
+
+    function searchActivities(question, baseItems = db) {
+        const scored = baseItems
+            .map(item => ({ item, score: scoreItemByQuestion(item, question) }))
+            .filter(x => x.score > 0)
+            .sort((a, b) => b.score - a.score);
+        return scored.map(x => x.item);
+    }
+
+    function detectIntent(question) {
+        const q = normalizeText(question);
+        if (/\b(help|huong dan|hoi duoc gi|ban co the)\b/.test(q)) return 'help';
+        if (/\b(thong ke|tong hop|bao cao|phan tich|bao nhieu|so luong|dem|tong cong)\b/.test(q)) return 'stats';
+        if (/\b(link nhom|nhom zalo|zalo)\b/.test(q)) return 'groupLink';
+        if (/\b(link|dang ky|form|bieu mau)\b/.test(q)) return 'registerLink';
+        if (/\b(han dang ky|deadline|het han khi nao|han chot)\b/.test(q)) return 'deadline';
+        if (/\b(dia diem|o dau|tai dau|cho nao)\b/.test(q)) return 'location';
+        if (/\b(thoi gian|lich|khi nao|may gio|ngay nao|luc nao)\b/.test(q)) return 'time';
+        if (/\b(trang phuc|mac gi|dong phuc)\b/.test(q)) return 'clothes';
+        if (/\b(quyen loi|ctxh|cong tac xa hoi|ren luyen|diem|gio)\b/.test(q)) return 'benefit';
+        if (/\b(don vi|phu trach|to chuc|ai phu trach)\b/.test(q)) return 'unit';
+        if (/\b(con mo|dang mo|con han|chua dong|dang tuyen)\b/.test(q)) return 'open';
+        if (/\b(het han|da dong|ngung|dong roi)\b/.test(q)) return 'closed';
+        if (/\b(goi y|nen tham gia|phu hop|noi bat)\b/.test(q)) return 'recommend';
+        return 'search';
+    }
+
+    function filterByQuestion(question, items = db) {
+        const q = normalizeText(question);
+        let results = [...items];
+        const month = detectMonthFromQuestion(question);
+        if (month) results = results.filter(i => activityHasMonth(i, month));
+
+        if (/\b(con mo|dang mo|con han|chua dong|dang tuyen)\b/.test(q)) results = results.filter(i => !isClosed(i['Trạng thái']));
+        if (/\b(het han|da dong|ngung|dong roi)\b/.test(q)) results = results.filter(i => isClosed(i['Trạng thái']));
+        if (q.includes('workshop')) results = results.filter(i => normalizeText(i['Loại']).includes('workshop') || normalizeText(i['Tên chương trình']).includes('workshop'));
+        else if (q.includes('cuoc thi') || q.includes('contest')) results = results.filter(i => normalizeText(i['Loại']).includes('cuoc thi') || normalizeText(i['Tên chương trình']).includes('cuoc thi'));
+        else if (q.includes('talkshow')) results = results.filter(i => normalizeText(i['Tên chương trình']).includes('talkshow') || normalizeText(i['Loại']).includes('talkshow'));
+
+        const keywordResults = searchActivities(question, results);
+        const shouldKeywordFilter = getQuestionKeywords(question).length > 0 && !['stats','open','closed','recommend'].includes(detectIntent(question));
+        if (shouldKeywordFilter && keywordResults.length) results = keywordResults;
+        return { results, month };
+    }
+
+    function normalizeActivityType(item) {
+        const type = normalizeText(item['Loại']);
+        const name = normalizeText(item['Tên chương trình']);
+        if (type.includes('workshop')) return 'Workshop';
+        if (type.includes('cuoc thi')) return 'Cuộc thi';
+        if (type.includes('talkshow') || name.includes('talkshow')) return 'Khác (Talkshow)';
+        if (name.includes('giao luu van hoa') || name.includes('indonesia') || name.includes('han quoc') || name.includes('lao') || name.includes('campuchia')) return 'Giao lưu văn hóa';
+        return 'Hoạt động CTXH, hỗ trợ, sự kiện';
+    }
+
+    function buildStatsReply(title, items) {
+        if (!items.length) return `${title}: chưa tìm thấy dữ liệu phù hợp.`;
+        const counts = {};
+        items.forEach(i => {
+            const key = normalizeActivityType(i);
+            counts[key] = (counts[key] || 0) + 1;
+        });
+        const typeLines = Object.entries(counts).sort((a,b)=>b[1]-a[1]).map(([k,v]) => `• ${k}: ${v}`).join('\n');
+        const ctxh4 = items.filter(i => /(^|\D)4\s*(h|gio|giờ)/i.test((i['Quyền lợi'] || '').toString())).length;
+        const ctxh8 = items.filter(i => /(^|\D)8\s*(h|gio|giờ)/i.test((i['Quyền lợi'] || '').toString())).length;
+        const ctxhLarge = items.filter(i => /(10|12|16)\s*(h|gio|giờ)/i.test((i['Quyền lợi'] || '').toString())).length;
+        const open = items.filter(i => !isClosed(i['Trạng thái'])).length;
+        const closed = items.length - open;
+        const totalStudents = countDeclaredStudents(items);
+        const top = items.slice(0, 10).map((i, idx) => `${idx + 1}. ${i['Tên chương trình']} (${i['Thời gian'] || i['Hạn đăng ký'] || 'Chưa cập nhật thời gian'})`).join('\n');
+        return `${title}: ${items.length} hoạt động.\n\nTheo loại:\n${typeLines}\n• Tổng cộng: ${items.length}\n\nTrạng thái:\n• Đang mở: ${open}\n• Đã đóng/ngưng: ${closed}\n\nQuyền lợi CTXH đọc được từ dữ liệu:\n• 4 giờ CTXH: ${ctxh4} hoạt động\n• 8 giờ CTXH: ${ctxh8} hoạt động\n• 10-16 giờ CTXH: ${ctxhLarge} hoạt động\n\nTổng chỉ tiêu sinh viên ghi rõ: khoảng ${totalStudents || 'chưa đủ dữ liệu'} sinh viên.\n\nMột số hoạt động:\n${top}${items.length > 10 ? `\n... và ${items.length - 10} hoạt động khác.` : ''}`;
+    }
+
+    function briefList(items, title, limit = 10) {
+        if (!items.length) return `${title}: chưa tìm thấy dữ liệu phù hợp.`;
+        const rows = items.slice(0, limit).map((i, idx) => `${idx + 1}. ${i['Tên chương trình']}\n   ⏰ ${i['Thời gian'] || 'Chưa cập nhật'}\n   📍 ${i['Địa điểm'] || 'Chưa cập nhật'}\n   🎁 ${i['Quyền lợi'] || 'Chưa cập nhật'}\n   🔗 ${i['Link đăng ký'] || 'Chưa có link'}`).join('\n');
+        const more = items.length > limit ? `\n\nCòn ${items.length - limit} hoạt động khác. Bạn có thể hỏi cụ thể hơn theo tên, tháng, loại hoặc quyền lợi.` : '';
+        return `${title}: ${items.length} hoạt động\n\n${rows}${more}`;
+    }
+
+    function fieldReply(items, field, label) {
+        if (!items.length) return `Mình chưa tìm thấy hoạt động phù hợp để trả lời ${label.toLowerCase()}.`;
+        return items.slice(0, 8).map((i, idx) => `${idx + 1}. ${i['Tên chương trình']}\n${label}: ${i[field] || 'Chưa cập nhật'}`).join('\n\n');
+    }
+
+    function recommendReply(items) {
+        if (!items.length) return 'Mình chưa có dữ liệu phù hợp để gợi ý.';
+        const openItems = items.filter(i => !isClosed(i['Trạng thái']));
+        const base = openItems.length ? openItems : items;
+        const ctxh = base.filter(i => normalizeText(i['Quyền lợi']).includes('ctxh') || normalizeText(i['Quyền lợi']).includes('cong tac xa hoi'));
+        const selected = (ctxh.length ? ctxh : base).slice(0, 8);
+        return briefList(selected, openItems.length ? 'Gợi ý hoạt động còn mở/ưu tiên có CTXH' : 'Gợi ý hoạt động theo dữ liệu hiện có', 8);
+    }
+
+    function helpReply() {
+        return `Mình có thể trả lời nhiều kiểu câu hỏi dựa trên dữ liệu bảng, ví dụ:\n\n• Thống kê tháng 5\n• Tháng 5 có bao nhiêu workshop?\n• Hoạt động nào còn mở?\n• Link đăng ký Job Fair\n• Địa điểm hội nghị phòng chống ma túy\n• Quyền lợi CTXH của Lễ công bố Thành phố Đồng Nai\n• Hoạt động nào cộng 8 giờ CTXH?\n• Hoạt động của KHOA CNTT-TT\n• Hạn đăng ký AI Storytelling\n\nMình cũng nhận diện nhiều kiểu thời gian như 09/5/2026, ngày 30/05/2026, từ 07/05 đến 31/05/2026, tháng 05/2026.`;
+    }
+
+    function getBotReply(question) {
+        if (!db.length) return 'Dữ liệu chưa tải xong. Bạn hỏi lại sau vài giây nhé.';
+        const intent = detectIntent(question);
+        if (intent === 'help') return helpReply();
+
+        if (intent === 'export') {
+            const exportMonth = detectMonthFromQuestion(question);
+            if (!exportMonth) return 'Bạn muốn xuất tháng mấy? Ví dụ: “Xuất file tháng 5”.';
+            const total = exportMonthFile(exportMonth);
+            return total ? `Mình đã xuất file Excel tháng ${parseInt(exportMonth, 10)} gồm ${total} hoạt động, sắp xếp từ đầu tháng đến cuối tháng.` : `Không tìm thấy dữ liệu tháng ${parseInt(exportMonth, 10)} để xuất file.`;
+        }
+
+        const q = normalizeText(question);
+        const { results, month } = filterByQuestion(question);
+
+        // Hỏi riêng theo số giờ CTXH, ví dụ: "hoạt động cộng 8 giờ ctxh"
+        const hourMatch = q.match(/(\d{1,2})\s*(h|gio|giờ)/);
+        if (hourMatch) {
+            const h = hourMatch[1];
+            const matched = results.filter(i => new RegExp(`(^|\\D)${h}\\s*(h|gio|giờ)`, 'i').test((i['Quyền lợi'] || '').toString()));
+            return briefList(matched, `Hoạt động có quyền lợi khoảng ${h} giờ CTXH`);
+        }
+
+        if (intent === 'stats') {
+            const title = month ? `Thống kê tháng ${parseInt(month, 10)}` : 'Thống kê toàn bộ dữ liệu';
+            return buildStatsReply(title, results);
+        }
+        if (intent === 'open') return briefList(results.filter(i => !isClosed(i['Trạng thái'])), month ? `Hoạt động còn mở trong tháng ${parseInt(month, 10)}` : 'Hoạt động còn mở');
+        if (intent === 'closed') return briefList(results.filter(i => isClosed(i['Trạng thái'])), month ? `Hoạt động đã đóng/ngưng trong tháng ${parseInt(month, 10)}` : 'Hoạt động đã đóng/ngưng');
+        if (intent === 'recommend') return recommendReply(results);
+        if (intent === 'groupLink') return fieldReply(results, 'Link nhóm', 'Link nhóm');
+        if (intent === 'registerLink') return fieldReply(results, 'Link đăng ký', 'Link đăng ký');
+        if (intent === 'deadline') return fieldReply(results, 'Hạn đăng ký', 'Hạn đăng ký');
+        if (intent === 'location') return fieldReply(results, 'Địa điểm', 'Địa điểm');
+        if (intent === 'time') return fieldReply(results, 'Thời gian', 'Thời gian');
+        if (intent === 'clothes') return fieldReply(results, 'Trang phục', 'Trang phục');
+        if (intent === 'benefit') return fieldReply(results, 'Quyền lợi', 'Quyền lợi');
+        if (intent === 'unit') return fieldReply(results, 'Đơn vị phụ trách', 'Đơn vị phụ trách');
+
+        if (month) return briefList(results, `Các hoạt động tháng ${parseInt(month, 10)}`);
+        const searched = searchActivities(question, db);
+        if (searched.length) return briefList(searched, 'Kết quả tìm kiếm phù hợp');
+        return `Mình chưa hiểu rõ câu hỏi này. Bạn có thể hỏi theo mẫu: "thống kê tháng 5", "link đăng ký Job Fair", "quyền lợi CTXH tháng 5", "địa điểm workshop", hoặc gõ "hướng dẫn" để xem các câu hỏi mình hỗ trợ.`;
+    }
 
     // Theme Toggle Logic
     function initTheme() {
