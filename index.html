@@ -780,6 +780,195 @@
             cursor: pointer;
         }
 
+
+        .chat-msg.bot .chat-bubble.has-rich-content {
+            background: transparent;
+            border: 0;
+            padding: 0;
+            max-width: 96%;
+            width: 96%;
+        }
+
+        .chat-answer-head {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 15px;
+            padding: 12px 13px;
+            margin-bottom: 10px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .chat-answer-head strong {
+            display: block;
+            font-size: 0.92rem;
+            color: var(--text-main);
+            margin-bottom: 4px;
+        }
+
+        .chat-answer-head p {
+            margin: 0;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            line-height: 1.45;
+        }
+
+        .chat-stat-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .chat-stat-box {
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 9px;
+            background: var(--bg-meta);
+        }
+
+        .chat-stat-box b {
+            display: block;
+            font-size: 1rem;
+            color: var(--it-navy);
+            line-height: 1.1;
+        }
+
+        .chat-stat-box span {
+            display: block;
+            margin-top: 3px;
+            font-size: 0.72rem;
+            color: var(--text-muted);
+            font-weight: 700;
+        }
+
+        .chat-result-list {
+            display: flex;
+            flex-direction: column;
+            gap: 9px;
+        }
+
+        .chat-result-card {
+            width: 100%;
+            text-align: left;
+            background: var(--bg-card);
+            color: var(--text-main);
+            border: 1px solid var(--border-color);
+            border-radius: 15px;
+            padding: 11px;
+            box-shadow: var(--shadow-sm);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .chat-result-card:hover,
+        .chat-result-card:focus {
+            outline: none;
+            transform: translateY(-1px);
+            border-color: var(--it-blue);
+            box-shadow: var(--shadow-md);
+        }
+
+        .chat-result-topline {
+            display: flex;
+            justify-content: space-between;
+            gap: 8px;
+            align-items: flex-start;
+            margin-bottom: 6px;
+        }
+
+        .chat-result-title {
+            font-size: 0.86rem;
+            line-height: 1.35;
+            font-weight: 800;
+            color: var(--text-main);
+            flex: 1;
+        }
+
+        .chat-result-status {
+            font-size: 0.68rem;
+            font-weight: 800;
+            white-space: nowrap;
+            border-radius: 999px;
+            padding: 3px 7px;
+            border: 1px solid currentColor;
+            color: var(--it-green);
+        }
+
+        .chat-result-status.closed {
+            color: var(--text-muted);
+        }
+
+        .chat-result-meta,
+        .chat-result-value {
+            color: var(--text-muted);
+            font-size: 0.76rem;
+            line-height: 1.45;
+            margin-top: 5px;
+        }
+
+        .chat-result-value b {
+            display: block;
+            color: var(--it-blue);
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            font-size: 0.68rem;
+            margin-bottom: 2px;
+        }
+
+        .chat-result-actions {
+            display: flex;
+            gap: 7px;
+            flex-wrap: wrap;
+            margin-top: 10px;
+        }
+
+        .chat-mini-btn,
+        .chat-mini-link {
+            border: 1px solid var(--border-color);
+            background: var(--bg-meta);
+            color: var(--text-main);
+            min-height: 34px;
+            border-radius: 10px;
+            padding: 0 10px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            font-size: 0.74rem;
+            font-weight: 800;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .chat-mini-link.primary {
+            background: var(--it-navy);
+            color: white;
+            border-color: var(--it-navy);
+        }
+
+        .chat-help-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .chat-help-btn {
+            border: 1px solid var(--border-color);
+            background: var(--bg-meta);
+            color: var(--text-main);
+            border-radius: 12px;
+            padding: 10px;
+            font-weight: 800;
+            font-size: 0.75rem;
+            cursor: pointer;
+            text-align: left;
+        }
+
+        .chat-help-btn:hover {
+            border-color: var(--it-blue);
+        }
+
         .chatbot-form {
             display: flex;
             gap: 8px;
@@ -880,17 +1069,17 @@
     </div>
     <div class="chatbot-messages" id="chatMessages"></div>
     <div class="chatbot-suggestions" id="chatSuggestions">
-        <button class="chat-chip" onclick="askBot('Thống kê tháng 5')">Thống kê tháng 5</button>
         <button class="chat-chip" onclick="askBot('Hoạt động đang mở')">Đang mở</button>
-        <button class="chat-chip" onclick="askBot('Workshop tháng 5')">Workshop tháng 5</button>
-        <button class="chat-chip" onclick="askBot('Cuộc thi tháng 5')">Cuộc thi tháng 5</button>
-        <button class="chat-chip" onclick="askBot('Hoạt động cộng 8 giờ CTXH')">8 giờ CTXH</button>
-        <button class="chat-chip" onclick="askBot('Link đăng ký Job Fair')">Link Job Fair</button>
-        <button class="chat-chip" onclick="askBot('Xuất file tháng 5')">Xuất tháng 5</button>
+        <button class="chat-chip" onclick="askBot('Hoạt động sắp hết hạn')">Sắp hết hạn</button>
+        <button class="chat-chip" onclick="askBot('Hoạt động có CTXH')">Có CTXH</button>
+        <button class="chat-chip" onclick="askBot('Link đăng ký các hoạt động')">Link đăng ký</button>
+        <button class="chat-chip" onclick="askBot('Workshop đang mở')">Workshop</button>
+        <button class="chat-chip" onclick="askBot('Cuộc thi đang mở')">Cuộc thi</button>
+        <button class="chat-chip" onclick="askBot('Tình nguyện đang mở')">Tình nguyện</button>
         <button class="chat-chip" onclick="askBot('Hướng dẫn')">Hướng dẫn</button>
     </div>
     <form class="chatbot-form" onsubmit="sendChat(event)">
-        <input id="chatInput" type="text" placeholder="Hỏi: link Job Fair, quyền lợi CTXH tháng 5, địa điểm workshop...">
+        <input id="chatInput" type="text" placeholder="Hỏi: hoạt động đang mở, sắp hết hạn, có CTXH, link đăng ký, địa điểm workshop...">
         <button type="submit"><i class="fas fa-paper-plane"></i></button>
     </form>
 </div>
@@ -1706,7 +1895,7 @@ body > img[src*="visitorbadge"]{
         if (open) applySuggestionState();
         if (open && !document.getElementById('chatMessages').dataset.started) {
             document.getElementById('chatMessages').dataset.started = '1';
-            addChatMessage('bot', 'Chào bạn! Mình có thể trả lời theo dữ liệu bảng: thống kê theo tháng, tìm hoạt động, link đăng ký, link nhóm, địa điểm, thời gian, hạn đăng ký, quyền lợi CTXH, trang phục, đơn vị phụ trách, trạng thái còn mở/đã đóng. Gõ “hướng dẫn” để xem mẫu câu hỏi.');
+            addChatMessage('bot', 'Chào bạn! Mình có thể trả lời theo dữ liệu bảng: hoạt động đang mở, sắp hết hạn, link đăng ký, link nhóm, địa điểm, thời gian, hạn đăng ký, quyền lợi CTXH, trang phục, đơn vị phụ trách. Khi mình trả về danh sách, bạn bấm vào từng thẻ để xem chi tiết.');
         }
     }
 
@@ -1728,13 +1917,22 @@ body > img[src*="visitorbadge"]{
 
     document.addEventListener('DOMContentLoaded', applySuggestionState);
 
-    function addChatMessage(role, text) {
+    let chatActivityStore = [];
+
+    function addChatMessage(role, content) {
         const box = document.getElementById('chatMessages');
         const row = document.createElement('div');
         row.className = `chat-msg ${role}`;
         const bubble = document.createElement('div');
         bubble.className = 'chat-bubble';
-        bubble.textContent = text;
+
+        if (content && typeof content === 'object' && content.html) {
+            bubble.innerHTML = content.html;
+            bubble.classList.add('has-rich-content');
+        } else {
+            bubble.textContent = content;
+        }
+
         row.appendChild(bubble);
         box.appendChild(row);
         box.scrollTop = box.scrollHeight;
@@ -1808,6 +2006,7 @@ body > img[src*="visitorbadge"]{
         if (/\b(thong ke|tong hop|bao cao|phan tich|bao nhieu|so luong|dem|tong cong)\b/.test(q)) return 'stats';
         if (/\b(link nhom|nhom zalo|zalo)\b/.test(q)) return 'groupLink';
         if (/\b(link|dang ky|form|bieu mau)\b/.test(q)) return 'registerLink';
+        if (/\b(sap het han|gan het han|deadline gan|han gan|han sap toi)\b/.test(q)) return 'upcomingDeadline';
         if (/\b(han dang ky|deadline|het han khi nao|han chot)\b/.test(q)) return 'deadline';
         if (/\b(dia diem|o dau|tai dau|cho nao)\b/.test(q)) return 'location';
         if (/\b(thoi gian|lich|khi nao|may gio|ngay nao|luc nao)\b/.test(q)) return 'time';
@@ -1816,7 +2015,7 @@ body > img[src*="visitorbadge"]{
         if (/\b(don vi|phu trach|to chuc|ai phu trach)\b/.test(q)) return 'unit';
         if (/\b(con mo|dang mo|con han|chua dong|dang tuyen)\b/.test(q)) return 'open';
         if (/\b(het han|da dong|ngung|dong roi)\b/.test(q)) return 'closed';
-        if (/\b(goi y|nen tham gia|phu hop|noi bat)\b/.test(q)) return 'recommend';
+        if (/\b(goi y|nen tham gia|phu hop|noi bat|co ctxh|ctxh)\b/.test(q)) return 'recommend';
         return 'search';
     }
 
@@ -1826,14 +2025,20 @@ body > img[src*="visitorbadge"]{
         const month = detectMonthFromQuestion(question);
         if (month) results = results.filter(i => activityHasMonth(i, month));
 
+        const intent = detectIntent(question);
         if (/\b(con mo|dang mo|con han|chua dong|dang tuyen)\b/.test(q)) results = results.filter(i => !isClosed(i['Trạng thái']));
-        if (/\b(het han|da dong|ngung|dong roi)\b/.test(q)) results = results.filter(i => isClosed(i['Trạng thái']));
+        if (intent !== 'upcomingDeadline' && /\b(het han|da dong|ngung|dong roi)\b/.test(q)) results = results.filter(i => isClosed(i['Trạng thái']));
         if (q.includes('workshop')) results = results.filter(i => normalizeText(i['Loại']).includes('workshop') || normalizeText(i['Tên chương trình']).includes('workshop'));
         else if (q.includes('cuoc thi') || q.includes('contest')) results = results.filter(i => normalizeText(i['Loại']).includes('cuoc thi') || normalizeText(i['Tên chương trình']).includes('cuoc thi'));
         else if (q.includes('talkshow')) results = results.filter(i => normalizeText(i['Tên chương trình']).includes('talkshow') || normalizeText(i['Loại']).includes('talkshow'));
+        else if (q.includes('tinh nguyen') || q.includes('thien nguyen')) results = results.filter(i => normalizeText(i['Loại']).includes('tinh nguyen') || normalizeText(i['Tên chương trình']).includes('tinh nguyen') || normalizeText(i['Tên chương trình']).includes('thien nguyen'));
+
+        if (q.includes('ctxh') || q.includes('cong tac xa hoi')) {
+            results = results.filter(i => normalizeText(i['Quyền lợi']).includes('ctxh') || normalizeText(i['Quyền lợi']).includes('cong tac xa hoi'));
+        }
 
         const keywordResults = searchActivities(question, results);
-        const shouldKeywordFilter = getQuestionKeywords(question).length > 0 && !['stats','open','closed','recommend'].includes(detectIntent(question));
+        const shouldKeywordFilter = getQuestionKeywords(question).length > 0 && !['stats','open','closed','recommend','upcomingDeadline'].includes(intent);
         if (shouldKeywordFilter && keywordResults.length) results = keywordResults;
         return { results, month };
     }
@@ -1848,47 +2053,173 @@ body > img[src*="visitorbadge"]{
         return 'Hoạt động CTXH, hỗ trợ, sự kiện';
     }
 
+    function botHtml(html) {
+        return { html };
+    }
+
+    function safeHref(value) {
+        const url = (value || '').toString().trim();
+        if (!/^https?:\/\//i.test(url)) return '';
+        return htmlEscape(url);
+    }
+
+    function shortText(value, max = 90) {
+        const text = (value || '').toString().trim();
+        if (!text) return 'Chưa cập nhật';
+        return text.length > max ? text.slice(0, max - 1) + '…' : text;
+    }
+
+    function registerChatActivity(item) {
+        chatActivityStore.push(item);
+        return chatActivityStore.length - 1;
+    }
+
+    function openChatActivity(index) {
+        const item = chatActivityStore[index];
+        if (item) showM(item);
+    }
+
+    function chatResultCard(item, field, label) {
+        const id = registerChatActivity(item);
+        const closed = isClosed(item['Trạng thái']);
+        const title = htmlEscape(item['Tên chương trình'] || 'Hoạt động chưa có tên');
+        const type = htmlEscape((item['Loại'] || 'HOẠT ĐỘNG').toString().toUpperCase());
+        const time = htmlEscape(shortText(item['Thời gian']));
+        const place = htmlEscape(shortText(item['Địa điểm']));
+        const deadline = htmlEscape(shortText(item['Hạn đăng ký']));
+        const benefit = htmlEscape(shortText(item['Quyền lợi']));
+        const registerLink = safeHref(item['Link đăng ký']);
+        const groupLink = safeHref(item['Link nhóm']);
+        const valueHtml = field
+            ? `<div class="chat-result-value"><b>${htmlEscape(label)}</b><span>${htmlEscape(shortText(item[field], 160))}</span></div>`
+            : `<div class="chat-result-meta">⏰ ${time}</div><div class="chat-result-meta">📍 ${place}</div><div class="chat-result-meta">🎁 ${benefit}</div>`;
+        const linkHtml = registerLink && !closed
+            ? `<a class="chat-mini-link primary" href="${registerLink}" target="_blank" onclick="event.stopPropagation()"><i class="fas fa-link"></i> Đăng ký</a>`
+            : '';
+        const groupHtml = groupLink && !closed
+            ? `<a class="chat-mini-link" href="${groupLink}" target="_blank" onclick="event.stopPropagation()"><i class="fas fa-users"></i> Nhóm</a>`
+            : '';
+        return `
+            <div class="chat-result-card" role="button" tabindex="0" onclick="openChatActivity(${id})" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openChatActivity(${id});}">
+                <div class="chat-result-topline">
+                    <div class="chat-result-title">${title}</div>
+                    <span class="chat-result-status ${closed ? 'closed' : ''}">${closed ? 'Đã đóng' : 'Đang mở'}</span>
+                </div>
+                <div class="chat-result-meta">🏷️ ${type} · Hạn: ${deadline}</div>
+                ${valueHtml}
+                <div class="chat-result-actions">
+                    <button type="button" class="chat-mini-btn" onclick="event.stopPropagation();openChatActivity(${id})"><i class="fas fa-circle-info"></i> Xem chi tiết</button>
+                    ${linkHtml}
+                    ${groupHtml}
+                </div>
+            </div>`;
+    }
+
+    function chatListReply(items, title, limit = 8, field = null, label = '') {
+        if (!items.length) {
+            return botHtml(`<div class="chat-answer-head"><strong>${htmlEscape(title)}</strong><p>Chưa tìm thấy dữ liệu phù hợp. Bạn thử hỏi ngắn hơn, ví dụ: “đang mở”, “có CTXH”, “link đăng ký”.</p></div>`);
+        }
+        const shown = items.slice(0, limit);
+        const more = items.length > limit ? `Còn ${items.length - limit} hoạt động khác. Bạn có thể hỏi cụ thể hơn theo tên, loại hoặc quyền lợi.` : 'Bấm vào thẻ để xem đầy đủ thông tin.';
+        return botHtml(`
+            <div class="chat-answer-head">
+                <strong>${htmlEscape(title)}: ${items.length} hoạt động</strong>
+                <p>${htmlEscape(more)}</p>
+            </div>
+            <div class="chat-result-list">${shown.map(i => chatResultCard(i, field, label)).join('')}</div>
+        `);
+    }
+
+    function parseAnyDate(value) {
+        const text = (value || '').toString();
+        let match = text.match(/\b(\d{1,2})\s*[\/-]\s*(\d{1,2})(?:\s*[\/-]\s*(\d{2,4}))?\b/);
+        if (!match) return null;
+        let year = match[3] || new Date().getFullYear().toString();
+        if (year.length === 2) year = '20' + year;
+        const d = parseInt(match[1], 10), m = parseInt(match[2], 10), y = parseInt(year, 10);
+        if (!Number.isFinite(d) || !Number.isFinite(m) || !Number.isFinite(y) || d < 1 || d > 31 || m < 1 || m > 12) return null;
+        return new Date(y, m - 1, d, 23, 59, 59);
+    }
+
+    function upcomingDeadlineItems(items) {
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        const open = items.filter(i => !isClosed(i['Trạng thái']));
+        const withDate = open
+            .map(item => ({ item, date: parseAnyDate(item['Hạn đăng ký']) || parseAnyDate(item['Thời gian']) }))
+            .filter(x => x.date && x.date >= today)
+            .sort((a, b) => a.date - b.date)
+            .map(x => x.item);
+        return withDate.length ? withDate : open;
+    }
+
     function buildStatsReply(title, items) {
-        if (!items.length) return `${title}: chưa tìm thấy dữ liệu phù hợp.`;
+        if (!items.length) return botHtml(`<div class="chat-answer-head"><strong>${htmlEscape(title)}</strong><p>Chưa tìm thấy dữ liệu phù hợp.</p></div>`);
         const counts = {};
         items.forEach(i => {
             const key = normalizeActivityType(i);
             counts[key] = (counts[key] || 0) + 1;
         });
-        const typeLines = Object.entries(counts).sort((a,b)=>b[1]-a[1]).map(([k,v]) => `• ${k}: ${v}`).join('\n');
+        const open = items.filter(i => !isClosed(i['Trạng thái'])).length;
+        const closed = items.length - open;
         const ctxh4 = items.filter(i => /(^|\D)4\s*(h|gio|giờ)/i.test((i['Quyền lợi'] || '').toString())).length;
         const ctxh8 = items.filter(i => /(^|\D)8\s*(h|gio|giờ)/i.test((i['Quyền lợi'] || '').toString())).length;
         const ctxhLarge = items.filter(i => /(10|12|16)\s*(h|gio|giờ)/i.test((i['Quyền lợi'] || '').toString())).length;
-        const open = items.filter(i => !isClosed(i['Trạng thái'])).length;
-        const closed = items.length - open;
         const totalStudents = countDeclaredStudents(items);
-        const top = items.slice(0, 10).map((i, idx) => `${idx + 1}. ${i['Tên chương trình']} (${i['Thời gian'] || i['Hạn đăng ký'] || 'Chưa cập nhật thời gian'})`).join('\n');
-        return `${title}: ${items.length} hoạt động.\n\nTheo loại:\n${typeLines}\n• Tổng cộng: ${items.length}\n\nTrạng thái:\n• Đang mở: ${open}\n• Đã đóng/ngưng: ${closed}\n\nQuyền lợi CTXH đọc được từ dữ liệu:\n• 4 giờ CTXH: ${ctxh4} hoạt động\n• 8 giờ CTXH: ${ctxh8} hoạt động\n• 10-16 giờ CTXH: ${ctxhLarge} hoạt động\n\nTổng chỉ tiêu sinh viên ghi rõ: khoảng ${totalStudents || 'chưa đủ dữ liệu'} sinh viên.\n\nMột số hoạt động:\n${top}${items.length > 10 ? `\n... và ${items.length - 10} hoạt động khác.` : ''}`;
+        const typeSummary = Object.entries(counts).sort((a,b)=>b[1]-a[1]).slice(0, 4).map(([k,v]) => `${k}: ${v}`).join(' · ');
+        const topItems = items.slice(0, 5);
+        return botHtml(`
+            <div class="chat-answer-head">
+                <strong>${htmlEscape(title)}: ${items.length} hoạt động</strong>
+                <p>${htmlEscape(typeSummary || 'Chưa đủ dữ liệu phân loại')}. Bấm vào các thẻ bên dưới để xem chi tiết.</p>
+                <div class="chat-stat-grid">
+                    <div class="chat-stat-box"><b>${open}</b><span>Đang mở</span></div>
+                    <div class="chat-stat-box"><b>${closed}</b><span>Đã đóng/ngưng</span></div>
+                    <div class="chat-stat-box"><b>${ctxh4 + ctxh8 + ctxhLarge}</b><span>Có CTXH đọc được</span></div>
+                    <div class="chat-stat-box"><b>${totalStudents || '—'}</b><span>Chỉ tiêu SV ghi rõ</span></div>
+                </div>
+            </div>
+            <div class="chat-result-list">${topItems.map(i => chatResultCard(i)).join('')}</div>
+        `);
     }
 
     function briefList(items, title, limit = 10) {
-        if (!items.length) return `${title}: chưa tìm thấy dữ liệu phù hợp.`;
-        const rows = items.slice(0, limit).map((i, idx) => `${idx + 1}. ${i['Tên chương trình']}\n   ⏰ ${i['Thời gian'] || 'Chưa cập nhật'}\n   📍 ${i['Địa điểm'] || 'Chưa cập nhật'}\n   🎁 ${i['Quyền lợi'] || 'Chưa cập nhật'}\n   🔗 ${i['Link đăng ký'] || 'Chưa có link'}`).join('\n');
-        const more = items.length > limit ? `\n\nCòn ${items.length - limit} hoạt động khác. Bạn có thể hỏi cụ thể hơn theo tên, tháng, loại hoặc quyền lợi.` : '';
-        return `${title}: ${items.length} hoạt động\n\n${rows}${more}`;
+        return chatListReply(items, title, limit);
     }
 
     function fieldReply(items, field, label) {
-        if (!items.length) return `Mình chưa tìm thấy hoạt động phù hợp để trả lời ${label.toLowerCase()}.`;
-        return items.slice(0, 8).map((i, idx) => `${idx + 1}. ${i['Tên chương trình']}\n${label}: ${i[field] || 'Chưa cập nhật'}`).join('\n\n');
+        return chatListReply(items, label, 8, field, label);
     }
 
     function recommendReply(items) {
-        if (!items.length) return 'Mình chưa có dữ liệu phù hợp để gợi ý.';
+        if (!items.length) return botHtml(`<div class="chat-answer-head"><strong>Gợi ý hoạt động</strong><p>Mình chưa có dữ liệu phù hợp để gợi ý.</p></div>`);
         const openItems = items.filter(i => !isClosed(i['Trạng thái']));
         const base = openItems.length ? openItems : items;
         const ctxh = base.filter(i => normalizeText(i['Quyền lợi']).includes('ctxh') || normalizeText(i['Quyền lợi']).includes('cong tac xa hoi'));
         const selected = (ctxh.length ? ctxh : base).slice(0, 8);
-        return briefList(selected, openItems.length ? 'Gợi ý hoạt động còn mở/ưu tiên có CTXH' : 'Gợi ý hoạt động theo dữ liệu hiện có', 8);
+        return chatListReply(selected, openItems.length ? 'Gợi ý hoạt động còn mở/ưu tiên có CTXH' : 'Gợi ý hoạt động theo dữ liệu hiện có', 8);
     }
 
     function helpReply() {
-        return `Mình có thể trả lời nhiều kiểu câu hỏi dựa trên dữ liệu bảng, ví dụ:\n\n• Thống kê tháng 5\n• Tháng 5 có bao nhiêu workshop?\n• Hoạt động nào còn mở?\n• Link đăng ký Job Fair\n• Địa điểm hội nghị phòng chống ma túy\n• Quyền lợi CTXH của Lễ công bố Thành phố Đồng Nai\n• Hoạt động nào cộng 8 giờ CTXH?\n• Hoạt động của KHOA CNTT\n• Hạn đăng ký AI Storytelling\n\nMình cũng nhận diện nhiều kiểu thời gian như 09/5/2026, ngày 30/05/2026, từ 07/05 đến 31/05/2026, tháng 05/2026.`;
+        const samples = [
+            ['Hoạt động đang mở', 'Đang mở'],
+            ['Hoạt động sắp hết hạn', 'Sắp hết hạn'],
+            ['Hoạt động có CTXH', 'Có CTXH'],
+            ['Link đăng ký các hoạt động', 'Link đăng ký'],
+            ['Workshop đang mở', 'Workshop'],
+            ['Cuộc thi đang mở', 'Cuộc thi'],
+            ['Tình nguyện đang mở', 'Tình nguyện'],
+            ['Hạn đăng ký các hoạt động', 'Hạn đăng ký']
+        ];
+        return botHtml(`
+            <div class="chat-answer-head">
+                <strong>Bạn có thể hỏi theo các nhóm chung</strong>
+                <p>Không cần ghi tháng cụ thể. Khi có danh sách trả về, bấm vào từng thẻ để mở cửa sổ chi tiết.</p>
+                <div class="chat-help-grid">
+                    ${samples.map(([q, label]) => `<button class="chat-help-btn" onclick="event.stopPropagation();askBot('${htmlEscape(q)}')">${htmlEscape(label)}</button>`).join('')}
+                </div>
+            </div>
+        `);
     }
 
     function getBotReply(question) {
@@ -1898,7 +2229,7 @@ body > img[src*="visitorbadge"]{
 
         if (intent === 'export') {
             const exportMonth = detectMonthFromQuestion(question);
-            if (!exportMonth) return 'Bạn muốn xuất tháng mấy? Ví dụ: “Xuất file tháng 5”.';
+            if (!exportMonth) return 'Bạn muốn xuất tháng mấy? Ví dụ: “Xuất file tháng 7”.';
             const total = exportMonthFile(exportMonth);
             return total ? `Mình đã xuất file Excel tháng ${parseInt(exportMonth, 10)} gồm ${total} hoạt động, sắp xếp từ đầu tháng đến cuối tháng.` : `Không tìm thấy dữ liệu tháng ${parseInt(exportMonth, 10)} để xuất file.`;
         }
@@ -1918,11 +2249,15 @@ body > img[src*="visitorbadge"]{
             const title = month ? `Thống kê tháng ${parseInt(month, 10)}` : 'Thống kê toàn bộ dữ liệu';
             return buildStatsReply(title, results);
         }
+        if (intent === 'upcomingDeadline') return chatListReply(upcomingDeadlineItems(results), month ? `Hoạt động sắp hết hạn trong tháng ${parseInt(month, 10)}` : 'Hoạt động sắp hết hạn', 8, 'Hạn đăng ký', 'Hạn đăng ký');
         if (intent === 'open') return briefList(results.filter(i => !isClosed(i['Trạng thái'])), month ? `Hoạt động còn mở trong tháng ${parseInt(month, 10)}` : 'Hoạt động còn mở');
         if (intent === 'closed') return briefList(results.filter(i => isClosed(i['Trạng thái'])), month ? `Hoạt động đã đóng/ngưng trong tháng ${parseInt(month, 10)}` : 'Hoạt động đã đóng/ngưng');
         if (intent === 'recommend') return recommendReply(results);
         if (intent === 'groupLink') return fieldReply(results, 'Link nhóm', 'Link nhóm');
-        if (intent === 'registerLink') return fieldReply(results, 'Link đăng ký', 'Link đăng ký');
+        if (intent === 'registerLink') {
+            const openResults = results.filter(i => !isClosed(i['Trạng thái']));
+            return fieldReply(openResults.length ? openResults : results, 'Link đăng ký', 'Link đăng ký');
+        }
         if (intent === 'deadline') return fieldReply(results, 'Hạn đăng ký', 'Hạn đăng ký');
         if (intent === 'location') return fieldReply(results, 'Địa điểm', 'Địa điểm');
         if (intent === 'time') return fieldReply(results, 'Thời gian', 'Thời gian');
@@ -1933,7 +2268,7 @@ body > img[src*="visitorbadge"]{
         if (month) return briefList(results, `Các hoạt động tháng ${parseInt(month, 10)}`);
         const searched = searchActivities(question, db);
         if (searched.length) return briefList(searched, 'Kết quả tìm kiếm phù hợp');
-        return `Mình chưa hiểu rõ câu hỏi này. Bạn có thể hỏi theo mẫu: "thống kê tháng 5", "link đăng ký Job Fair", "quyền lợi CTXH tháng 5", "địa điểm workshop", hoặc gõ "hướng dẫn" để xem các câu hỏi mình hỗ trợ.`;
+        return `Mình chưa hiểu rõ câu hỏi này. Bạn có thể hỏi theo mẫu: "hoạt động đang mở", "sắp hết hạn", "hoạt động có CTXH", "link đăng ký", "địa điểm workshop", hoặc gõ "hướng dẫn" để xem các câu hỏi mình hỗ trợ.`;
     }
 
     // Theme Toggle Logic
