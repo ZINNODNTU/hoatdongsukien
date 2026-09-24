@@ -1011,3 +1011,8 @@
     text-align: center;
     color: var(--text-muted);
 }
+
+/* Static-build utility styles moved from inline HTML. */
+.loader { text-align: center; grid-column: 1 / -1; }
+.modal-title { margin: 0; font-size: 1.3rem; }
+.chatbot-header-actions { display: flex; align-items: center; gap: 0; }

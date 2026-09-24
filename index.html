@@ -21,33 +21,33 @@
 
 <div class="container">
     <div class="toolbar">
-        <button class="theme-toggle" onclick="toggleTheme()" id="themeToggle" title="Chuyển giao diện">
+        <button class="theme-toggle" id="themeToggle" title="Chuyển giao diện">
             <i class="fas fa-moon"></i>
         </button>
         <div class="filter-tabs" id="typeTabs">
-            <button class="tab-btn active" onclick="setTab('TẤT CẢ')">Tất cả</button>
-            <button class="tab-btn" onclick="setTab('CUỘC THI')">Cuộc thi</button>
-            <button class="tab-btn" onclick="setTab('WORKSHOP')">Workshop</button>
-            <button class="tab-btn" onclick="setTab('HOẠT ĐỘNG')">Hoạt động</button>
+            <button class="tab-btn active" data-tab="TẤT CẢ">Tất cả</button>
+            <button class="tab-btn" data-tab="CUỘC THI">Cuộc thi</button>
+            <button class="tab-btn" data-tab="WORKSHOP">Workshop</button>
+            <button class="tab-btn" data-tab="HOẠT ĐỘNG">Hoạt động</button>
         </div>
         <div class="search-row">
             <div class="search-box">
                 <i class="fas fa-search"></i>
-                <input type="text" id="searchInput" placeholder="Tìm tên hoạt động, đơn vị..." oninput="onSearch()">
+                <input type="text" id="searchInput" placeholder="Tìm tên hoạt động, đơn vị...">
             </div>
-            <select id="monthFilter" class="month-picker" onchange="onMonth()">
+            <select id="monthFilter" class="month-picker">
                 <option value="ALL">Mọi tháng</option>
                 <option value="01">Tháng 1</option><option value="02">Tháng 2</option><option value="03">Tháng 3</option>
                 <option value="04">Tháng 4</option><option value="05">Tháng 5</option><option value="06">Tháng 6</option>
                 <option value="07">Tháng 7</option><option value="08">Tháng 8</option><option value="09">Tháng 9</option>
                 <option value="10">Tháng 10</option><option value="11">Tháng 11</option><option value="12">Tháng 12</option>
             </select>
-            <button class="export-btn" onclick="exportMonthFromSelect()"><i class="fas fa-file-excel"></i> Xuất file tháng</button>
+            <button class="export-btn" type="button"><i class="fas fa-file-excel"></i> Xuất file tháng</button>
         </div>
     </div>
 
     <div class="grid" id="mainGrid">
-        <div class="loader" style="text-align: center; grid-column: 1/-1;">Đang tải dữ liệu hoạt động...</div>
+        <div class="loader">Đang tải dữ liệu hoạt động...</div>
     </div>
 
     <div class="pagination" id="pagination"></div>
@@ -55,16 +55,16 @@
 
 <div id="toast">✅ Đã sao chép nội dung chia sẻ!</div>
 
-<div class="modal" id="modalOverlay" onclick="closeM(event)">
-    <div class="modal-box" onclick="event.stopPropagation()">
-        <div class="modal-h"><h2 id="mTitle" style="margin:0; font-size:1.3rem;"></h2></div>
+<div class="modal" id="modalOverlay">
+    <div class="modal-box">
+        <div class="modal-h"><h2 id="mTitle" class="modal-title"></h2></div>
         <div class="modal-b" id="mBody"></div>
         <div class="card-foot" id="mFooter"></div>
     </div>
 </div>
 
 
-<button class="chatbot-toggle" onclick="toggleChatbot()" title="Chatbot tư vấn hoạt động">
+<button class="chatbot-toggle" title="Chatbot tư vấn hoạt động">
     <i class="fas fa-comments"></i>
 </button>
 
@@ -74,23 +74,23 @@
             <strong>Chatbot hoạt động</strong>
             <small>Đọc dữ liệu trực tiếp từ danh sách</small>
         </div>
-        <div style="display:flex; align-items:center; gap:0;">
-            <button class="chatbot-suggestion-toggle" id="suggestionToggleBtn" onclick="toggleSuggestions()" title="Ẩn/hiện phần gợi ý">Ẩn gợi ý</button>
-            <button class="chatbot-close" onclick="toggleChatbot(false)"><i class="fas fa-times"></i></button>
+        <div class="chatbot-header-actions">
+            <button class="chatbot-suggestion-toggle" id="suggestionToggleBtn" title="Ẩn/hiện phần gợi ý">Ẩn gợi ý</button>
+            <button class="chatbot-close" type="button"><i class="fas fa-times"></i></button>
         </div>
     </div>
     <div class="chatbot-messages" id="chatMessages"></div>
     <div class="chatbot-suggestions" id="chatSuggestions">
-        <button class="chat-chip" onclick="askBot('Hoạt động đang mở')">Đang mở</button>
-        <button class="chat-chip" onclick="askBot('Hoạt động sắp hết hạn')">Sắp hết hạn</button>
-        <button class="chat-chip" onclick="askBot('Hoạt động có CTXH')">Có CTXH</button>
-        <button class="chat-chip" onclick="askBot('Link đăng ký các hoạt động')">Link đăng ký</button>
-        <button class="chat-chip" onclick="askBot('Workshop đang mở')">Workshop</button>
-        <button class="chat-chip" onclick="askBot('Cuộc thi đang mở')">Cuộc thi</button>
-        <button class="chat-chip" onclick="askBot('Tình nguyện đang mở')">Tình nguyện</button>
-        <button class="chat-chip" onclick="askBot('Hướng dẫn')">Hướng dẫn</button>
+        <button class="chat-chip" type="button" data-question="Hoạt động đang mở">Đang mở</button>
+        <button class="chat-chip" type="button" data-question="Hoạt động sắp hết hạn">Sắp hết hạn</button>
+        <button class="chat-chip" type="button" data-question="Hoạt động có CTXH">Có CTXH</button>
+        <button class="chat-chip" type="button" data-question="Link đăng ký các hoạt động">Link đăng ký</button>
+        <button type="button" class="chat-chip" data-question="Workshop đang mở">Workshop</button>
+        <button type="button" class="chat-chip" data-question="Cuộc thi đang mở">Cuộc thi</button>
+        <button type="button" class="chat-chip" data-question="Tình nguyện đang mở">Tình nguyện</button>
+        <button type="button" class="chat-chip" data-question="Hướng dẫn">Hướng dẫn</button>
     </div>
-    <form class="chatbot-form" onsubmit="sendChat(event)">
+    <form class="chatbot-form">
         <input id="chatInput" type="text" placeholder="Hỏi: hoạt động đang mở, sắp hết hạn, có CTXH, link đăng ký, địa điểm workshop...">
         <button type="submit"><i class="fas fa-paper-plane"></i></button>
     </form>
