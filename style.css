@@ -1016,3 +1016,403 @@
 .loader { text-align: center; grid-column: 1 / -1; }
 .modal-title { margin: 0; font-size: 1.3rem; }
 .chatbot-header-actions { display: flex; align-items: center; gap: 0; }
+
+/* =========================================================
+   Responsive hardening - phone / tablet / iPad / desktop
+   ========================================================= */
+html {
+    width: 100%;
+    min-width: 0;
+    overflow-x: hidden;
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+}
+
+body {
+    width: 100%;
+    min-width: 0;
+    overflow-x: hidden;
+}
+
+button,
+input,
+select,
+textarea {
+    font: inherit;
+}
+
+a,
+.meta-text,
+.m-item,
+.chat-bubble,
+.chat-result-card {
+    min-width: 0;
+}
+
+.meta-text p,
+.m-item p,
+.m-item a,
+.chat-result-value,
+.footer a {
+    overflow-wrap: anywhere;
+    word-break: break-word;
+}
+
+.container {
+    width: min(100%, 1432px);
+}
+
+.grid {
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
+    align-items: stretch;
+}
+
+.card,
+.toolbar,
+.modal-box,
+.chatbot-panel {
+    min-width: 0;
+}
+
+.search-box input,
+.month-picker,
+.export-btn {
+    min-width: 0;
+}
+
+.month-picker {
+    background: var(--bg-card);
+    color: var(--text-main);
+    border-color: var(--border-color);
+}
+
+.btn-share,
+.p-btn {
+    background: var(--bg-card);
+    border-color: var(--border-color);
+    color: var(--text-main);
+}
+
+.modal-box,
+.modal-h {
+    background: var(--bg-modal);
+    color: var(--text-main);
+}
+
+.m-item {
+    background: var(--bg-meta);
+}
+
+.pagination {
+    flex-wrap: wrap;
+    padding-inline: 8px;
+}
+
+#toast {
+    max-width: calc(100vw - 32px);
+    text-align: center;
+    white-space: normal;
+}
+
+@media (max-width: 1024px) {
+    .hero {
+        padding: 42px 20px 82px;
+    }
+
+    .container {
+        margin-top: -54px;
+    }
+
+    .toolbar {
+        padding: 20px;
+    }
+
+    .search-row {
+        grid-template-columns: minmax(0, 1fr) minmax(150px, auto);
+    }
+
+    .export-btn {
+        grid-column: 1 / -1;
+        width: 100%;
+    }
+}
+
+@media (max-width: 768px) {
+    .hero {
+        padding: 34px 16px 72px;
+    }
+
+    .hero h1 {
+        font-size: clamp(1.05rem, 5vw, 1.35rem);
+        line-height: 1.35;
+    }
+
+    .stats-badge {
+        max-width: 100%;
+        padding: 9px 16px;
+        white-space: normal;
+        justify-content: center;
+    }
+
+    .container {
+        margin: -46px auto 38px;
+        padding-inline: 12px;
+    }
+
+    .toolbar {
+        padding: 16px;
+        margin-bottom: 20px;
+        border-radius: 14px;
+    }
+
+    .theme-toggle {
+        position: static;
+        margin-left: auto;
+        margin-bottom: 12px;
+        width: 44px;
+        height: 44px;
+    }
+
+    .filter-tabs {
+        margin-inline: -4px;
+        padding-inline: 4px;
+        gap: 8px;
+        scroll-snap-type: x proximity;
+    }
+
+    .tab-btn {
+        padding: 10px 16px;
+        min-height: 44px;
+        scroll-snap-align: start;
+    }
+
+    .search-row {
+        grid-template-columns: 1fr;
+        gap: 10px;
+        margin-top: 14px;
+    }
+
+    .search-box input,
+    .month-picker,
+    .export-btn {
+        width: 100%;
+        min-height: 50px;
+    }
+
+    .search-box input,
+    .chatbot-form input,
+    .month-picker {
+        font-size: 16px;
+    }
+
+    .grid {
+        gap: 16px;
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
+    }
+
+    .card-head {
+        padding: 18px 18px 10px;
+    }
+
+    .card-body {
+        padding: 0 18px 14px;
+    }
+
+    .card-foot {
+        padding: 14px 18px 18px;
+    }
+
+    .meta-group {
+        gap: 10px;
+        margin-top: 12px;
+    }
+
+    .meta-row {
+        padding: 9px;
+    }
+
+    .modal {
+        align-items: flex-end;
+        padding: 0;
+    }
+
+    .modal-box {
+        max-width: none;
+        max-height: min(92dvh, 92vh);
+        border-radius: 20px 20px 0 0;
+        padding-bottom: env(safe-area-inset-bottom, 0px);
+    }
+
+    .modal-h {
+        padding: 20px 18px 14px;
+    }
+
+    .modal-b {
+        padding: 16px 18px 20px;
+    }
+
+    .m-item {
+        margin-bottom: 12px;
+        padding: 12px;
+    }
+
+    .modal-box > .card-foot {
+        position: sticky;
+        bottom: 0;
+        background: var(--bg-modal);
+        z-index: 4;
+        padding-bottom: calc(14px + env(safe-area-inset-bottom, 0px));
+    }
+
+    .chatbot-toggle {
+        right: max(14px, env(safe-area-inset-right, 0px));
+        bottom: max(14px, env(safe-area-inset-bottom, 0px));
+        width: 54px;
+        height: 54px;
+    }
+
+    .chatbot-panel {
+        inset: auto 8px calc(76px + env(safe-area-inset-bottom, 0px)) 8px;
+        width: auto;
+        height: min(70dvh, 620px);
+        max-height: calc(100dvh - 92px - env(safe-area-inset-top, 0px));
+        border-radius: 18px;
+    }
+
+    .chatbot-header {
+        padding: 13px 14px;
+    }
+
+    .chatbot-header small {
+        display: none;
+    }
+
+    .chatbot-suggestion-toggle {
+        min-width: auto;
+        padding-inline: 9px;
+    }
+
+    .footer {
+        margin-top: 36px;
+        padding: 24px 16px calc(24px + env(safe-area-inset-bottom, 0px));
+    }
+
+    #toast {
+        bottom: calc(18px + env(safe-area-inset-bottom, 0px));
+        padding: 12px 18px;
+        border-radius: 14px;
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .hero {
+        padding-inline: 12px;
+    }
+
+    .container {
+        padding-inline: 8px;
+    }
+
+    .toolbar {
+        padding: 12px;
+        border-radius: 12px;
+    }
+
+    .grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    .tag-line {
+        align-items: flex-start;
+        gap: 8px;
+    }
+
+    .type-tag,
+    .status-tag {
+        font-size: 0.68rem;
+    }
+
+    .card-title {
+        font-size: 1rem;
+        min-height: auto;
+        -webkit-line-clamp: 3;
+    }
+
+    .card-head {
+        padding: 16px 14px 8px;
+    }
+
+    .card-body {
+        padding: 0 14px 12px;
+    }
+
+    .card-foot {
+        padding: 12px 14px 14px;
+        gap: 8px;
+    }
+
+    .card-foot .btn-detail,
+    .card-foot .btn-reg {
+        min-width: calc(50% - 4px);
+    }
+
+    .btn-share {
+        width: 100%;
+        flex-basis: 100%;
+    }
+
+    .modal-box > .card-foot .btn {
+        min-width: 100%;
+        flex: 1 1 100% !important;
+    }
+
+    .chat-stat-grid,
+    .chat-help-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .chatbot-suggestions {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        padding-bottom: 10px;
+    }
+
+    .chat-chip {
+        flex: 0 0 auto;
+        white-space: nowrap;
+    }
+
+    .pagination {
+        gap: 7px;
+        margin-top: 30px;
+    }
+
+    .p-btn {
+        width: 40px;
+        height: 40px;
+    }
+}
+
+@media (hover: none) and (pointer: coarse) {
+    .card:hover,
+    .btn:hover,
+    .tab-btn:hover,
+    .theme-toggle:hover,
+    .export-btn:hover,
+    .p-btn:hover {
+        transform: none;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        scroll-behavior: auto !important;
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}

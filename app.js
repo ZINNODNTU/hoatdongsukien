@@ -167,50 +167,56 @@
     }
 
     async function copyInfo(i) {
-        const values = Object.values(i || {});
-        const title = String(values[1] || "Ho\\u1ea1t \\u0111\\u1ed9ng ch\\u01b0a c\\u00f3 t\\u00ean").trim();
-        const time = String(values[2] || "").trim();
-        const location = String(values[3] || "").trim();
-        const outfit = String(values[4] || "").trim();
-        const quantity = String(values[5] || "").trim();
-        const benefit = String(values[6] || "").trim();
-        const deadline = String(values[7] || "").trim();
-        const registerLink = String(values[8] || "").trim();
-        const groupLink = String(values[9] || "").trim();
-        const unit = String(values[10] || "").trim();
+        // Giữ nội dung clipboard gọn khi dán vào Messenger/Zalo/Teams:
+        // loại bỏ xuống dòng/tab ẩn từ dữ liệu Google Sheets.
+        const compact = value => String(value ?? "")
+            .replace(/\r\n?|\n/g, " ")
+            .replace(/[\t\f\v ]+/g, " ")
+            .trim();
+
+        const title = compact(i?.["Tên chương trình"] || "Hoạt động chưa có tên");
+        const time = compact(i?.["Thời gian"]);
+        const location = compact(i?.["Địa điểm"]);
+        const outfit = compact(i?.["Trang phục"]);
+        const quantity = compact(i?.["Số lượng"]);
+        const benefit = compact(i?.["Quyền lợi"]);
+        const deadline = compact(i?.["Hạn đăng ký"]);
+        const registerLink = compact(i?.["Link đăng ký"]);
+        const groupLink = compact(i?.["Link nhóm"]);
+        const unit = compact(i?.["Đơn vị phụ trách"]);
         const lines = [
-            title,
-            time ? "\\u23f0 Th\\u1eddi gian: " + time : "",
-            location ? "\\ud83d\\udccd \\u0110\\u1ecba \\u0111i\\u1ec3m: " + location : "",
-            outfit ? "\\ud83d\\udc55 Trang ph\\u1ee5c: " + outfit : "",
-            quantity ? "\\ud83d\\udc65 S\\u1ed1 l\\u01b0\\u1ee3ng: " + quantity : "",
-            benefit ? "\\ud83d\\udc8e Quy\\u1ec1n l\\u1ee3i: " + benefit : "",
-            unit ? "\\ud83c\\udfe2 \\u0110\\u01a1n v\\u1ecb: " + unit : "",
-            deadline ? "\\u23f3 H\\u1ea1n \\u0111\\u0103ng k\\u00fd: " + deadline : "",
-            registerLink ? "\\ud83d\\udd17 Link \\u0111\\u0103ng k\\u00fd: " + registerLink : "",
-            groupLink ? "\\ud83d\\udc65 Link nh\\u00f3m: " + groupLink : "",
-            "\\ud83d\\udc49 Xem th\\u00ea0 ho\\u1ea1t \\u0111\\u1ed9ng: " + window.location.href
+            "📢 " + title.toUpperCase(),
+            time ? "⏰ Thời gian: " + time : "",
+            location ? "📍 Địa điểm: " + location : "",
+            outfit ? "👕 Trang phục: " + outfit : "",
+            quantity ? "👥 Số lượng: " + quantity : "",
+            benefit ? "💎 Quyền lợi: " + benefit : "",
+            unit ? "🏢 Đơn vị phụ trách: " + unit : "",
+            deadline ? "⏳ Hạn đăng ký: " + deadline : "",
+            registerLink ? "🔗 Link đăng ký: " + registerLink : "",
+            groupLink ? "👥 Link nhóm: " + groupLink : "",
+            "👉 Xem thêm các hoạt động: https://zinnodntu.github.io/hoatdongsukien/"
         ].filter(Boolean);
-        const text = lines.join("\\n");
+        const text = lines.join("\n");
         try {
             if (navigator.clipboard && window.isSecureContext) await navigator.clipboard.writeText(text);
             else {
                 const area = document.createElement("textarea");
-                area.value = text; area.style.position = "fixed"; area.style.left = "-9999px";
+                area.value = text; area.style.position = "fixed"; area.style.left = "-9999px"; area.style.top = "0";
                 document.body.appendChild(area); area.focus(); area.select();
                 const ok = document.execCommand("copy"); document.body.removeChild(area);
                 if (!ok) throw new Error("copy failed");
             }
             const toast = document.getElementById("toast");
             if (toast) {
-                toast.innerText = "\\u2713 \\u0110\\u00e3 sao ch\\u00e9p n\\u1ed9i dung s\\u1ef1 ki\\u1ec7n!";
+                toast.innerText = "✓ Đã sao chép nội dung sự kiện!";
                 toast.style.display = "block";
                 clearTimeout(window.__copyToastTimer);
                 window.__copyToastTimer = setTimeout(() => { toast.style.display = "none"; }, 2500);
             }
         } catch (error) {
             console.error("[copyInfo]", error);
-            alert("Kh\\u00f4ng th\\u1ec3 sao ch\\u00e9p t\\u1ef1 \\u0111\\u1ed9ng. B\\u1ea1n h\\u00e3y th\\u1eed l\\u1ea1i.");
+            alert("Không thể sao chép tự động. Bạn hãy thử lại.");
         }
     }
     function renderPag() {
